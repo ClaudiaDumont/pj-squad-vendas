@@ -15,7 +15,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - run: npm ci
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f package.json ]; then
+            npm install
+          else
+            echo "No package.json — repository has no npm project, skipping install"
+          fi
       - run: npm run lint --if-present || true
 
   test:
@@ -26,7 +34,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - run: npm ci
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f package.json ]; then
+            npm install
+          else
+            echo "No package.json — repository has no npm project, skipping install"
+          fi
       - run: npm test --if-present || true
 
   typecheck:
@@ -37,5 +53,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - run: npm ci
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f package.json ]; then
+            npm install
+          else
+            echo "No package.json — repository has no npm project, skipping install"
+          fi
       - run: npm run typecheck --if-present || true
