@@ -1,0 +1,162 @@
+# Catálogo de Situações de Venda — Teo Esportes
+# Artefato PRODUTIZÁVEL: consumido pelo app (Fase 2) via API.
+# Cada situação referencia: template de landing page, pack de prompts e template de copy.
+# Fonte: docs/briefing-inicial §7 (tipos de venda) e §8 (templates de landing page)
+
+schema_version: "1.0"
+id: situacoes-venda-teo
+metadata:
+  squad: teo-esportes
+  owner: teo-triagem
+  created: "2026-07-13"
+  version: "1.0.0"
+
+situacoes:
+  - id: produto-fisico
+    nome: "Produto Físico"
+    descricao: >-
+      Venda de itens físicos com variações, estoque e entrega/retirada.
+      Camisas comemorativas, uniformes, regatas, kits e produtos comemorativos.
+    template_lp: template-1-produto-fisico
+    prompt_pack: prompts/produto-fisico.yaml
+    copy_template: templates/copy-produto-fisico-tmpl.md
+    recursos_lp: [galeria, variacoes, estoque, combo, carrinho, entrega, retirada]
+    modelo_venda: carrinho
+    exige_pagamento: true
+    exige_entrega: true
+    exemplos: ["Camisa preta 2026", "Uniforme de triathlon", "Kit corredor"]
+
+  - id: evento-festa
+    nome: "Evento e Festa"
+    descricao: >-
+      Venda de ingressos para eventos sociais com data, local, lotes e
+      limite de participantes. Festa junina, festa de final de ano, confraternizações.
+    template_lp: template-2-evento-festa
+    prompt_pack: prompts/evento-festa.yaml
+    copy_template: templates/copy-evento-festa-tmpl.md
+    recursos_lp: [data, local, mapa, programacao, lotes, ingressos, acompanhantes, limite_participantes, lista_presenca]
+    modelo_venda: ingresso
+    exige_pagamento: true
+    exige_entrega: false
+    exemplos: ["Festa junina 2026", "Festa de final de ano", "Confraternização de alunos"]
+
+  - id: espaco-vip
+    nome: "Espaço VIP em Prova"
+    descricao: >-
+      Venda de acesso a estrutura VIP em provas esportivas, com quantidade
+      limitada, tipos de acesso e acompanhantes. Volta da Pampulha, provas no RJ.
+    template_lp: template-3-espaco-vip
+    prompt_pack: prompts/espaco-vip.yaml
+    copy_template: templates/copy-espaco-vip-tmpl.md
+    recursos_lp: [prova_relacionada, localizacao, estrutura, horario_funcionamento, beneficios, tipos_acesso, quantidade_limitada, acompanhantes, termos]
+    modelo_venda: acesso
+    exige_pagamento: true
+    exige_entrega: false
+    exemplos: ["VIP Pampulha 2026", "VIP Maratona do Rio"]
+
+  - id: servico-recovery
+    nome: "Serviço Agendado / Recovery"
+    descricao: >-
+      Venda de serviços com sessões, agenda, profissionais e limite de vagas.
+      Espaço recovery, recuperação esportiva e reservas de horário.
+    template_lp: template-4-recovery
+    prompt_pack: prompts/servico-recovery.yaml
+    copy_template: templates/copy-servico-recovery-tmpl.md
+    recursos_lp: [descricao_servico, tecnicas, agenda, sessoes, profissionais, duracao, horarios, limite_vagas, orientacoes, restricoes]
+    modelo_venda: reserva
+    exige_pagamento: true
+    exige_entrega: false
+    exemplos: ["Recovery pós-prova", "Pacote 4 sessões recovery"]
+
+  - id: programa-corporativo
+    nome: "Programa Corporativo"
+    descricao: >-
+      Captura de leads B2B para programas esportivos e de qualidade de vida
+      oferecidos por empresas aos funcionários. Foco em proposta, não em checkout.
+    template_lp: template-5-programa-corporativo
+    prompt_pack: prompts/programa-corporativo.yaml
+    copy_template: templates/copy-programa-corporativo-tmpl.md
+    recursos_lp: [apresentacao_institucional, modalidades, beneficios_empresa, beneficios_funcionarios, formato, participantes, solicitacao_proposta, captura_lead, contato_comercial, pagina_restrita]
+    modelo_venda: lead
+    exige_pagamento: false
+    exige_entrega: false
+    exemplos: ["Programa corporativo Empresa X", "Qualidade de vida corporativa"]
+
+  - id: inscricao-gratuita
+    nome: "Inscrição Gratuita"
+    descricao: >-
+      Campanha gratuita com inscrição e lista de participantes. Eventos para
+      alunos, treinos abertos e ações de relacionamento sem cobrança.
+    template_lp: template-2-evento-festa
+    prompt_pack: prompts/inscricao-gratuita.yaml
+    copy_template: templates/copy-inscricao-gratuita-tmpl.md
+    recursos_lp: [data, local, programacao, limite_participantes, lista_presenca, formulario]
+    modelo_venda: inscricao
+    exige_pagamento: false
+    exige_entrega: false
+    exemplos: ["Treinão aberto", "Aula experimental de natação"]
+
+  - id: personalizada
+    nome: "Campanha Personalizada"
+    descricao: >-
+      Fallback para situações que não se encaixam nas anteriores. Usa blocos
+      modulares (hero, texto, produtos, FAQ, checkout etc.) ativáveis e reordenáveis.
+    template_lp: template-6-personalizada
+    prompt_pack: prompts/personalizada.yaml
+    copy_template: templates/copy-personalizada-tmpl.md
+    recursos_lp: [hero, texto, imagem, video, beneficios, produtos, servicos, tabela_precos, programacao, depoimentos, parceiros, localizacao, faq, formulario, carrinho, checkout, contagem_regressiva, aviso, whatsapp, rodape]
+    modelo_venda: configuravel
+    exige_pagamento: null   # definido caso a caso
+    exige_entrega: null
+    exemplos: ["Campanha híbrida produto + evento", "Novo modelo de negócio"]
+
+# Campos obrigatórios do briefing por situação.
+# Usado pelo gate do PM (impedir publicação de campanha incompleta) e pelo app.
+campos_obrigatorios:
+  comuns:
+    - nome_interno
+    - nome_publico
+    - slug
+    - objetivo
+    - publico_alvo
+    - responsavel
+    - data_inicio
+    - data_encerramento
+  produto-fisico:
+    - produtos
+    - precos
+    - variacoes
+    - estoque
+    - formas_entrega
+    - data_prevista_entrega
+  evento-festa:
+    - data_evento
+    - local
+    - lotes_ou_precos
+    - limite_participantes
+  espaco-vip:
+    - prova_relacionada
+    - localizacao
+    - estrutura_oferecida
+    - tipos_acesso
+    - quantidade_disponivel
+    - termos_especificos
+  servico-recovery:
+    - descricao_servico
+    - sessoes_ou_pacotes
+    - precos
+    - horarios_disponiveis
+    - limite_vagas
+  programa-corporativo:
+    - apresentacao_programa
+    - modalidades
+    - formato
+    - contato_comercial
+  inscricao-gratuita:
+    - data_evento
+    - local
+    - limite_participantes
+    - campos_formulario
+  personalizada:
+    - blocos_selecionados
+    - modelo_venda_definido

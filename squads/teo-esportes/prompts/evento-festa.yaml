@@ -1,0 +1,136 @@
+# Prompt Pack — Evento e Festa
+# Situação: ingressos para festas e eventos sociais (data, local, lotes, participantes)
+# Contrato: prompts/_contrato.yaml
+
+id: prompt-pack-evento-festa
+situacao: evento-festa
+version: "1.0.0"
+
+prompts:
+  gerar_proposta:
+    descricao: "Proposta de campanha de evento a partir do briefing validado"
+    agente_padrao: "@teo-estrategista"
+    input_variables:
+      - campanha_nome_publico
+      - campanha_objetivo
+      - publico_alvo
+      - data_evento
+      - local
+      - lotes_ou_precos       # lotes com preço, quantidade e período OU preço único
+      - limite_participantes
+      - data_inicio
+      - data_encerramento
+    input_variables_opcionais: [programacao, acompanhantes_permitidos, itens_inclusos, itens_nao_inclusos]
+    system: |
+      Você é o Estrategista de Marketing da Teo Esportes. Transforme o briefing
+      em proposta de campanha de evento/festa. Herda guardrails_globais
+      (prompts/_contrato.yaml). Foque em: experiência coletiva, pertencimento
+      à comunidade Teo, clareza de data/local/lotes e senso de ocasião especial.
+    template: |
+      Crie a proposta da campanha de evento "{{campanha_nome_publico}}".
+
+      OBJETIVO: {{campanha_objetivo}}
+      PÚBLICO: {{publico_alvo}}
+      EVENTO: {{data_evento}} em {{local}}
+      LOTES/PREÇOS: {{lotes_ou_precos}}
+      LIMITE DE PARTICIPANTES: {{limite_participantes}}
+      VENDAS: {{data_inicio}} a {{data_encerramento}}
+      PROGRAMAÇÃO: {{programacao}}
+      ACOMPANHANTES: {{acompanhantes_permitidos}}
+
+      Entregue: Resumo; Público-alvo; Oferta (lotes, ingressos, acompanhantes);
+      Proposta de valor da experiência; Gatilhos legítimos (lote virando,
+      vagas reais); Estrutura sugerida da página; Datas; Riscos e pendências.
+    output_format: markdown
+    output_schema: "templates/proposta-campanha-tmpl.md"
+
+  gerar_copy_lp:
+    descricao: "Copy completa da landing page de evento"
+    agente_padrao: "@teo-copywriter"
+    input_variables:
+      - campanha_nome_publico
+      - proposta_valor
+      - publico_alvo
+      - data_evento
+      - local
+      - lotes_ou_precos
+      - data_encerramento
+      - gatilhos_aprovados
+    input_variables_opcionais: [programacao, itens_inclusos, itens_nao_inclusos, acompanhantes_permitidos, informacoes_importantes]
+    system: |
+      Você é o Copywriter da Teo Esportes. Escreva copy de landing page de
+      evento seguindo templates/copy-evento-festa-tmpl.md. Herda
+      guardrails_globais. Transmita a atmosfera do evento sem inventar
+      atrações não informadas.
+    template: |
+      Escreva a copy da landing page do evento "{{campanha_nome_publico}}".
+
+      PROPOSTA DE VALOR: {{proposta_valor}}
+      PÚBLICO: {{publico_alvo}}
+      QUANDO/ONDE: {{data_evento}} — {{local}}
+      LOTES: {{lotes_ou_precos}}
+      PROGRAMAÇÃO: {{programacao}}
+      INCLUSO: {{itens_inclusos}} | NÃO INCLUSO: {{itens_nao_inclusos}}
+      GATILHOS APROVADOS: {{gatilhos_aprovados}}
+
+      Preencha todas as seções do template: headline, subheadline, texto
+      principal (a experiência), programação, o que está incluso, lotes e
+      preços, CTA (3 variações), urgência de lote (apenas com dado real),
+      mensagem de ingressos esgotados, mensagem de vendas encerradas.
+    output_format: markdown
+    output_schema: "templates/copy-evento-festa-tmpl.md"
+
+  gerar_faq:
+    descricao: "FAQ específica de evento"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, data_evento, local, lotes_ou_precos]
+    input_variables_opcionais: [acompanhantes_permitidos, politica_cancelamento, estacionamento, criancas, trajes]
+    system: |
+      Você é o Copywriter da Teo Esportes. Gere FAQ realista de evento.
+      Herda guardrails_globais. Perguntas prováveis sem resposta no input
+      viram [PENDENTE] para o organizador responder.
+    template: |
+      Gere 8 a 12 perguntas frequentes para o evento "{{campanha_nome_publico}}"
+      ({{data_evento}}, {{local}}). Cubra: acompanhantes
+      ({{acompanhantes_permitidos}}), cancelamento ({{politica_cancelamento}}),
+      lotes ({{lotes_ou_precos}}), chegada/local, crianças ({{criancas}}),
+      estacionamento ({{estacionamento}}).
+    output_format: markdown
+    output_schema: "Lista de pares **Pergunta** / Resposta"
+
+  gerar_mensagens:
+    descricao: "Mensagens transacionais de ingresso/inscrição"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, data_evento, local]
+    input_variables_opcionais: [instrucoes_chegada, contato_suporte]
+    system: |
+      Você é o Copywriter da Teo Esportes. Mensagens transacionais de evento,
+      curtas e claras. Herda guardrails_globais.
+    template: |
+      Gere as mensagens da campanha "{{campanha_nome_publico}}":
+      1. Confirmação de compra do ingresso (tela + e-mail)
+      2. Aguardando pagamento Pix (com expiração)
+      3. Pagamento confirmado — participação garantida
+      4. Pix expirado
+      5. Lembrete de véspera do evento ({{data_evento}}, {{local}}, {{instrucoes_chegada}})
+      6. Agradecimento pós-evento
+    output_format: markdown
+    output_schema: "Seções numeradas com versão e-mail e versão WhatsApp/tela"
+
+  gerar_divulgacao:
+    descricao: "Divulgação multicanal do evento"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, proposta_valor, url_campanha, data_evento, data_encerramento]
+    input_variables_opcionais: [gatilhos_aprovados, lotes_ou_precos]
+    system: |
+      Você é o Copywriter da Teo Esportes. Divulgação multicanal de evento.
+      Herda guardrails_globais.
+    template: |
+      Gere para "{{campanha_nome_publico}}" ({{data_evento}}, link {{url_campanha}}):
+      1. WhatsApp para grupos de alunos
+      2. Legenda de Instagram (com 5 hashtags)
+      3. E-mail de lançamento (assunto + corpo)
+      4. Aviso de virada de lote (apenas se {{lotes_ou_precos}} tiver lotes)
+      5. Última chamada (véspera de {{data_encerramento}})
+    output_format: markdown
+    output_schema: "Seções numeradas prontas para revisão humana"

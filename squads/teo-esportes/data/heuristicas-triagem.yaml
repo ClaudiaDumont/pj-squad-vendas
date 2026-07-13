@@ -1,0 +1,228 @@
+# Heurísticas de Triagem — Squad Teo Esportes
+# Artefato PRODUTIZÁVEL #1: motor de classificação da situação de venda.
+# Contrato: perguntas (máx 5) → regras determinísticas → situação de venda.
+# Consumível por engine de formulário no app (Fase 2) ou pelo agente @teo-triagem.
+#
+# Formato de execução:
+#   1. Apresentar perguntas na ordem, respeitando `exibir_se`.
+#   2. Avaliar `regras_classificacao` na ordem declarada (first-match-wins).
+#   3. Se nenhuma regra casar → `fallback`.
+#   4. Retornar objeto `resultado` (ver output_schema).
+
+schema_version: "1.0"
+id: heuristicas-triagem-teo
+metadata:
+  squad: teo-esportes
+  owner: teo-triagem
+  version: "1.0.0"
+  created: "2026-07-13"
+  catalogo_situacoes: data/situacoes-venda.yaml
+  max_perguntas: 5
+
+perguntas:
+  - id: q1_tipo_oferta
+    ordem: 1
+    obrigatoria: true
+    pergunta: "O que será oferecido nesta campanha?"
+    tipo: single_choice
+    opcoes:
+      - id: item_fisico
+        label: "Um item físico (camisa, uniforme, regata, kit, produto comemorativo)"
+      - id: evento_com_data
+        label: "Um evento com data marcada (festa, confraternização, treinão, encontro)"
+      - id: acesso_em_prova
+        label: "Acesso a estrutura em prova esportiva (espaço VIP, área exclusiva)"
+      - id: servico_com_agenda
+        label: "Um serviço com horário/sessões (recovery, atendimento, reserva)"
+      - id: programa_para_empresa
+        label: "Um programa para empresas oferecerem aos funcionários (B2B)"
+      - id: outro
+        label: "Outro / combinação de formatos"
+
+  - id: q2_cobranca
+    ordem: 2
+    obrigatoria: true
+    pergunta: "Haverá cobrança nesta campanha?"
+    tipo: single_choice
+    opcoes:
+      - id: pago
+        label: "Sim, com pagamento online (Pix/cartão)"
+      - id: pago_externo
+        label: "Sim, mas o pagamento acontece fora da plataforma (no local ou por proposta)"
+      - id: gratuito
+        label: "Não, é gratuita (inscrição ou captura de contato)"
+
+  - id: q3_variacoes
+    ordem: 3
+    obrigatoria: false
+    exibir_se:
+      q1_tipo_oferta: [item_fisico]
+    pergunta: "O item tem variações (tamanho, cor, modelo, gênero)?"
+    tipo: single_choice
+    opcoes:
+      - id: com_variacoes
+        label: "Sim, o comprador escolhe variações"
+      - id: sem_variacoes
+        label: "Não, item único"
+
+  - id: q4_capacidade
+    ordem: 4
+    obrigatoria: false
+    exibir_se:
+      q1_tipo_oferta: [evento_com_data, acesso_em_prova, servico_com_agenda]
+    pergunta: "Existe limite de vagas, ingressos ou horários?"
+    tipo: single_choice
+    opcoes:
+      - id: limitado_lotes
+        label: "Sim, com lotes ou tipos de acesso diferentes"
+      - id: limitado_simples
+        label: "Sim, limite único de vagas"
+      - id: ilimitado
+        label: "Não há limite relevante"
+
+  - id: q5_conversao
+    ordem: 5
+    obrigatoria: false
+    exibir_se:
+      q1_tipo_oferta: [programa_para_empresa, outro]
+    pergunta: "Qual é a ação esperada do visitante na página?"
+    tipo: single_choice
+    opcoes:
+      - id: comprar
+        label: "Comprar/pagar diretamente na página"
+      - id: solicitar_proposta
+        label: "Solicitar proposta ou contato comercial"
+      - id: inscrever
+        label: "Preencher inscrição"
+
+# Regras avaliadas em ordem — first-match-wins.
+# `se` usa AND entre chaves; valores em lista significam OR.
+regras_classificacao:
+  - id: R01
+    descricao: "Item físico vendido online → produto físico"
+    se:
+      q1_tipo_oferta: [item_fisico]
+      q2_cobranca: [pago, pago_externo]
+    entao:
+      situacao: produto-fisico
+      confianca: alta
+
+  - id: R02
+    descricao: "Item físico gratuito (brinde com inscrição) → inscrição gratuita"
+    se:
+      q1_tipo_oferta: [item_fisico]
+      q2_cobranca: [gratuito]
+    entao:
+      situacao: inscricao-gratuita
+      confianca: media
+      observacao: "Item físico sem cobrança tratado como inscrição com brinde. Confirmar logística de retirada."
+
+  - id: R03
+    descricao: "Evento com data e cobrança → evento/festa"
+    se:
+      q1_tipo_oferta: [evento_com_data]
+      q2_cobranca: [pago, pago_externo]
+    entao:
+      situacao: evento-festa
+      confianca: alta
+
+  - id: R04
+    descricao: "Evento gratuito → inscrição gratuita"
+    se:
+      q1_tipo_oferta: [evento_com_data]
+      q2_cobranca: [gratuito]
+    entao:
+      situacao: inscricao-gratuita
+      confianca: alta
+
+  - id: R05
+    descricao: "Acesso VIP em prova → espaço VIP"
+    se:
+      q1_tipo_oferta: [acesso_em_prova]
+    entao:
+      situacao: espaco-vip
+      confianca: alta
+
+  - id: R06
+    descricao: "Serviço com agenda → serviço/recovery"
+    se:
+      q1_tipo_oferta: [servico_com_agenda]
+    entao:
+      situacao: servico-recovery
+      confianca: alta
+
+  - id: R07
+    descricao: "Programa B2B com solicitação de proposta → corporativo"
+    se:
+      q1_tipo_oferta: [programa_para_empresa]
+    entao:
+      situacao: programa-corporativo
+      confianca: alta
+
+  - id: R08
+    descricao: "Outro formato, mas com inscrição gratuita → inscrição gratuita"
+    se:
+      q1_tipo_oferta: [outro]
+      q2_cobranca: [gratuito]
+      q5_conversao: [inscrever]
+    entao:
+      situacao: inscricao-gratuita
+      confianca: media
+
+  - id: R09
+    descricao: "Outro formato com captura de lead → corporativo (estrutura de lead)"
+    se:
+      q1_tipo_oferta: [outro]
+      q5_conversao: [solicitar_proposta]
+    entao:
+      situacao: programa-corporativo
+      confianca: baixa
+      observacao: "Revisar com humano: estrutura de captura de lead aplicada fora do contexto B2B."
+
+fallback:
+  situacao: personalizada
+  confianca: baixa
+  acao: >-
+    Encaminhar para revisão humana com blocos modulares sugeridos pelo
+    @teo-estrategista. Nunca publicar campanha personalizada sem aprovação.
+
+# Modificadores: enriquecem o resultado sem alterar a classificação.
+modificadores:
+  - id: M01
+    se: { q3_variacoes: [com_variacoes] }
+    adicionar: { requer_variacoes: true }
+  - id: M02
+    se: { q4_capacidade: [limitado_lotes] }
+    adicionar: { requer_lotes: true }
+  - id: M03
+    se: { q4_capacidade: [limitado_simples] }
+    adicionar: { requer_limite_vagas: true }
+  - id: M04
+    se: { q2_cobranca: [pago] }
+    adicionar: { requer_checkout: true, requer_pix: true }
+  - id: M05
+    se: { q2_cobranca: [pago_externo] }
+    adicionar: { requer_checkout: false, requer_instrucoes_pagamento: true }
+
+output_schema:
+  resultado:
+    situacao: "string — id em data/situacoes-venda.yaml"
+    confianca: "alta | media | baixa"
+    regra_aplicada: "string — id da regra (ex.: R03) ou 'fallback'"
+    modificadores: "objeto — flags acumuladas dos modificadores"
+    template_lp: "string — resolvido via catálogo de situações"
+    prompt_pack: "string — resolvido via catálogo de situações"
+    copy_template: "string — resolvido via catálogo de situações"
+    campos_pendentes: "lista — campos_obrigatorios da situação ainda não preenchidos"
+    requer_revisao_humana: "boolean — true se confianca != alta ou situacao == personalizada"
+
+veto_conditions:
+  - id: VT01
+    condicao: "confianca == baixa"
+    acao: "Bloquear avanço automático. Exigir confirmação humana da classificação."
+  - id: VT02
+    condicao: "campos_pendentes não vazio"
+    acao: "Bloquear geração de proposta até briefing completo (gate do @teo-pm)."
+  - id: VT03
+    condicao: "situacao == personalizada"
+    acao: "Exigir definição explícita de modelo_venda e blocos antes de prosseguir."

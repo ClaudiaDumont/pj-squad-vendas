@@ -1,0 +1,143 @@
+# Prompt Pack — Programa Corporativo
+# Situação: captura de leads B2B para programas esportivos oferecidos por empresas
+# Contrato: prompts/_contrato.yaml
+# Nota: modelo_venda = lead (sem checkout). CTA = solicitação de proposta.
+
+id: prompt-pack-programa-corporativo
+situacao: programa-corporativo
+version: "1.0.0"
+
+prompts:
+  gerar_proposta:
+    descricao: "Proposta de campanha B2B a partir do briefing validado"
+    agente_padrao: "@teo-estrategista"
+    input_variables:
+      - campanha_nome_publico
+      - campanha_objetivo
+      - publico_alvo           # perfil das empresas-alvo (RH, gestores de benefícios)
+      - apresentacao_programa
+      - modalidades
+      - formato                # presencial, online, híbrido; frequência
+      - contato_comercial
+      - data_inicio
+      - data_encerramento
+    input_variables_opcionais: [beneficios_empresa, beneficios_funcionarios, numero_participantes, cases, pagina_restrita_empresa]
+    system: |
+      Você é o Estrategista de Marketing da Teo Esportes. Transforme o briefing
+      em proposta de campanha B2B de programa corporativo. Herda
+      guardrails_globais (prompts/_contrato.yaml). Tom institucional-esportivo:
+      credibilidade, benefícios para empresa (engajamento, saúde, retenção) e
+      para funcionários — APENAS os informados no input. Conversão = lead
+      qualificado, não venda direta.
+    template: |
+      Crie a proposta da campanha B2B "{{campanha_nome_publico}}".
+
+      OBJETIVO: {{campanha_objetivo}}
+      EMPRESAS-ALVO: {{publico_alvo}}
+      PROGRAMA: {{apresentacao_programa}}
+      MODALIDADES: {{modalidades}}
+      FORMATO: {{formato}}
+      BENEFÍCIOS EMPRESA: {{beneficios_empresa}}
+      BENEFÍCIOS FUNCIONÁRIOS: {{beneficios_funcionarios}}
+      PARTICIPANTES: {{numero_participantes}}
+      CONTATO COMERCIAL: {{contato_comercial}}
+      PERÍODO: {{data_inicio}} a {{data_encerramento}}
+
+      Entregue: Resumo; Perfil de empresa-alvo e persona do decisor (RH/gestão);
+      Oferta (programa, modalidades, formato); Proposta de valor B2B;
+      Estrutura sugerida da página; Campos do formulário de lead (mínimos
+      necessários); Fluxo pós-lead (quem contata, prazo); Riscos e pendências.
+    output_format: markdown
+    output_schema: "templates/proposta-campanha-tmpl.md"
+
+  gerar_copy_lp:
+    descricao: "Copy completa da landing page B2B"
+    agente_padrao: "@teo-copywriter"
+    input_variables:
+      - campanha_nome_publico
+      - proposta_valor
+      - publico_alvo
+      - apresentacao_programa
+      - modalidades
+      - formato
+      - contato_comercial
+    input_variables_opcionais: [beneficios_empresa, beneficios_funcionarios, cases, numero_participantes, informacoes_importantes]
+    system: |
+      Você é o Copywriter da Teo Esportes. Escreva copy de landing page B2B
+      seguindo templates/copy-programa-corporativo-tmpl.md. Herda
+      guardrails_globais. Tom institucional e confiável; sem urgência
+      artificial (B2B não usa contagem regressiva). Cases e números APENAS
+      se informados no input.
+    template: |
+      Escreva a copy da landing page B2B "{{campanha_nome_publico}}".
+
+      PROPOSTA DE VALOR: {{proposta_valor}}
+      DECISOR-ALVO: {{publico_alvo}}
+      PROGRAMA: {{apresentacao_programa}}
+      MODALIDADES: {{modalidades}}
+      FORMATO: {{formato}}
+      BENEFÍCIOS EMPRESA: {{beneficios_empresa}}
+      BENEFÍCIOS FUNCIONÁRIOS: {{beneficios_funcionarios}}
+      CASES: {{cases}}
+
+      Preencha todas as seções do template: headline, subheadline,
+      apresentação institucional da Teo, o programa, modalidades, formato,
+      benefícios para a empresa, benefícios para os funcionários, como
+      funciona a implantação, CTA de solicitação de proposta (3 variações),
+      formulário de lead (texto de apoio), contato comercial.
+    output_format: markdown
+    output_schema: "templates/copy-programa-corporativo-tmpl.md"
+
+  gerar_faq:
+    descricao: "FAQ específica de programa corporativo"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, apresentacao_programa, modalidades, formato]
+    input_variables_opcionais: [numero_participantes, precificacao_modelo, prazo_implantacao]
+    system: |
+      Você é o Copywriter da Teo Esportes. FAQ realista B2B. Herda
+      guardrails_globais. Perguntas de decisor de RH/benefícios; sem resposta
+      no input → [PENDENTE].
+    template: |
+      Gere 8 a 12 perguntas frequentes para "{{campanha_nome_publico}}".
+      Cubra: número mínimo/máximo de participantes ({{numero_participantes}}),
+      formato e logística ({{formato}}), modalidades ({{modalidades}}),
+      modelo de precificação ({{precificacao_modelo}}), prazo de implantação
+      ({{prazo_implantacao}}), personalização por empresa, acompanhamento e
+      relatórios para o RH.
+    output_format: markdown
+    output_schema: "Lista de pares **Pergunta** / Resposta"
+
+  gerar_mensagens:
+    descricao: "Mensagens do fluxo de lead (confirmação e follow-up)"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, contato_comercial]
+    input_variables_opcionais: [prazo_retorno]
+    system: |
+      Você é o Copywriter da Teo Esportes. Mensagens do fluxo de lead B2B.
+      Herda guardrails_globais. Prometa retorno apenas com {{prazo_retorno}}
+      informado.
+    template: |
+      Gere as mensagens da campanha "{{campanha_nome_publico}}":
+      1. Confirmação de solicitação de proposta (tela + e-mail)
+      2. E-mail de follow-up comercial (enviado por {{contato_comercial}})
+      3. Mensagem de WhatsApp comercial de primeiro contato
+      4. E-mail de proposta enviada (acompanhamento)
+    output_format: markdown
+    output_schema: "Seções numeradas prontas para revisão humana"
+
+  gerar_divulgacao:
+    descricao: "Divulgação multicanal B2B"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, proposta_valor, url_campanha]
+    input_variables_opcionais: [publico_alvo, cases]
+    system: |
+      Você é o Copywriter da Teo Esportes. Divulgação B2B — LinkedIn no lugar
+      de grupos de alunos. Herda guardrails_globais.
+    template: |
+      Gere para "{{campanha_nome_publico}}" (link {{url_campanha}}):
+      1. Post de LinkedIn institucional
+      2. E-mail de prospecção para RHs (assunto + corpo curto)
+      3. Mensagem de WhatsApp para indicações de alunos que trabalham em empresas
+      4. Legenda de Instagram institucional
+    output_format: markdown
+    output_schema: "Seções numeradas prontas para revisão humana"
