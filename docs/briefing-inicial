@@ -1,0 +1,1238 @@
+# CRIAÇÃO DO SQUAD DE LANDING PAGES E VENDAS DA TEO ESPORTES
+
+Seu objetivo é analisar o projeto existente da landing page de venda de camisas da Teo Esportes e criar um **Squad especializado na construção, publicação e administração de campanhas de vendas**, operado por funcionários da empresa por meio de um aplicativo web.
+
+## 1. Contexto do negócio
+
+A Teo Esportes é uma assessoria esportiva que oferece:
+
+* Treinamento de corrida;
+* Triathlon;
+* Natação;
+* Treinamento de força;
+* Planilhas de treinamento online;
+* Programas esportivos e de qualidade de vida para empresas oferecerem como benefício aos funcionários.
+
+Além dos serviços recorrentes, a empresa realiza campanhas pontuais para arrecadação adicional, como:
+
+* Camisas comemorativas;
+* Uniformes esportivos;
+* Regatas e outros produtos;
+* Festas juninas;
+* Festas de final de ano;
+* Eventos para alunos;
+* Espaços VIP em provas;
+* Eventos relacionados à Volta Internacional da Pampulha;
+* Eventos e provas no Rio de Janeiro;
+* Inscrições em eventos;
+* Espaço recovery;
+* Serviços de recuperação esportiva;
+* Outros produtos ou experiências criados futuramente.
+
+Referência do projeto existente - Já existe uma landing page de vendas desenvolvida para a comercialização de camisas da Teo Esportes, localizada em: C:\Users\02687063606\Desktop\Arquivos Desktop\cohort\zg\pj-landing-vendas. Este projeto deverá ser analisado antes do início do desenvolvimento e utilizado como referência técnica, arquitetural e funcional. Sempre que possível, seus componentes, padrões e integrações deverão ser reaproveitados. Entretanto, a nova plataforma deverá ser genérica e flexível, não ficando limitada ao fluxo de venda de camisas. Toda a arquitetura deverá permitir a criação de campanhas para diferentes tipos de produtos, serviços, eventos e futuras oportunidades de negócio da Teo Esportes.
+
+Toda interface criada para a plataforma, incluindo landing pages, painel administrativo e futuras funcionalidades, deverá seguir obrigatoriamente o Design System oficial da Teo Esportes, localizado em: C:\Users\02687063606\Desktop\Arquivos Desktop\cohort\zg\pj-designsystem\design-system-teo . Antes de desenvolver qualquer interface, o Design System deverá ser estudado para garantir consistência visual, reutilização de componentes, padronização de cores, tipografia, espaçamentos, ícones, animações, responsividade e experiência do usuário. Nenhuma nova interface deverá ser criada ignorando esses padrões, salvo quando houver justificativa técnica documentada.
+
+A plataforma de campanhas deverá ser projetada desde o início para permitir futura integração com o Sistema Financeiro da Teo Esportes, atualmente em desenvolvimento. Embora essa integração não faça parte do escopo inicial (MVP), toda a modelagem de dados e arquitetura deverão estar preparadas para compartilhar informações financeiras, como pedidos, pagamentos, custos, receitas e demais indicadores. O objetivo é que, futuramente, o CEO tenha uma visão consolidada da rentabilidade de cada campanha, produto, serviço ou evento, permitindo analisar faturamento, custos, margem de contribuição, lucro ou prejuízo e demais indicadores estratégicos diretamente no sistema financeiro da empresa.
+
+
+## 2. Objetivo principal
+
+Criar uma plataforma chamada provisoriamente de:
+
+**Loja - Teo Esportes**
+
+A plataforma deverá permitir que funcionários autorizados criem, configurem, publiquem, acompanhem e encerrem campanhas de vendas sem precisar alterar código.
+
+Cada campanha deverá gerar uma landing page própria, com:
+
+* URL exclusiva;
+* Copy personalizada;
+* Imagens próprias;
+* Identidade visual configurável;
+* Produtos ou serviços;
+* Preços;
+* Variações;
+* Datas de venda;
+* Quantidade disponível;
+* Formas de entrega;
+* Formas de pagamento;
+* Formulário do comprador;
+* Carrinho, quando aplicável;
+* Painel administrativo;
+* Relatórios de vendas.
+
+A landing page atual deve se transformar em uma das possíveis estruturas ou templates da plataforma.
+
+---
+
+# 3. Primeira etapa obrigatória: análise do projeto existente
+
+Antes de escrever ou alterar qualquer código:
+
+1. Leia todo o repositório atual.
+
+2. Identifique:
+
+   * Framework utilizado;
+   * Estrutura de pastas;
+   * Componentes existentes;
+   * Banco de dados;
+   * Autenticação;
+   * Integração de pagamento;
+   * Integração com Pix;
+   * Integração com a Efí/Gerencianet, caso exista;
+   * Uso do Supabase;
+   * Variáveis de ambiente;
+   * Fluxo de criação do pedido;
+   * Fluxo de confirmação do pagamento;
+   * Webhooks;
+   * Painel administrativo existente;
+   * Armazenamento de imagens;
+   * Carrinho;
+   * Regras de entrega;
+   * Regras de encerramento da campanha;
+   * Componentes visuais reutilizáveis.
+
+3. Identifique o que pode ser reutilizado e o que precisa ser refatorado.
+
+4. Não destrua funcionalidades existentes.
+
+5. Não substitua integrações funcionais sem justificativa técnica.
+
+6. Preserve a landing page de camisas existente como uma campanha válida dentro da nova arquitetura.
+
+7. Produza inicialmente um relatório chamado:
+
+`docs/ANALISE-PROJETO-ATUAL.md`
+
+O relatório deverá conter:
+
+* Arquitetura encontrada;
+* Tecnologias utilizadas;
+* Funcionalidades existentes;
+* Problemas encontrados;
+* Riscos;
+* Componentes reutilizáveis;
+* Plano de migração;
+* Recomendações.
+
+Somente depois dessa análise, inicie a implementação.
+
+---
+
+# 4. Criar um Squad especializado
+
+Crie dentro do projeto uma estrutura de Squad composta pelos seguintes agentes.
+
+## 4.1 Product Manager
+
+Responsável por:
+
+* Interpretar a solicitação da campanha;
+* Identificar o tipo de produto ou serviço;
+* Definir o objetivo da campanha;
+* Organizar os requisitos;
+* Identificar informações ausentes;
+* Gerar o briefing estruturado;
+* Definir critérios de aceite;
+* Impedir a publicação de campanhas incompletas.
+
+## 4.2 Estrategista de Marketing
+
+Responsável por:
+
+* Definir o posicionamento da campanha;
+* Identificar o público-alvo;
+* Criar a proposta de valor;
+* Definir gatilhos de comunicação sem criar promessas falsas;
+* Sugerir ofertas, combos e benefícios;
+* Definir chamadas para ação;
+* Adequar a comunicação ao tipo de campanha.
+
+## 4.3 Copywriter
+
+Responsável por produzir:
+
+* Headline;
+* Subheadline;
+* Texto principal;
+* Benefícios;
+* Descrição dos produtos;
+* Descrição dos serviços;
+* Chamadas para ação;
+* Perguntas frequentes;
+* Mensagens de urgência;
+* Mensagens de estoque limitado;
+* Mensagens de vendas encerradas;
+* Textos de confirmação do pedido;
+* Textos de pagamento;
+* Textos de WhatsApp e e-mail relacionados à campanha.
+
+A copy deve ser específica para cada campanha. Não utilizar textos genéricos ou simplesmente substituir o nome do produto em uma copy antiga.
+
+## 4.4 UX/UI Designer
+
+Responsável por:
+
+* Escolher o template mais adequado;
+* Organizar as seções da landing page;
+* Manter a identidade da Teo Esportes;
+* Garantir legibilidade;
+* Garantir responsividade;
+* Garantir acessibilidade;
+* Adaptar o layout ao produto, serviço ou evento;
+* Criar hierarquia visual;
+* Configurar banners, galerias e chamadas para ação;
+* Evitar que todas as campanhas tenham aparência idêntica.
+
+## 4.5 Especialista em E-commerce e Conversão
+
+Responsável por:
+
+* Definir o modelo de venda;
+* Configurar produto simples, produto com variações, combo, ingresso, serviço ou reserva;
+* Configurar carrinho;
+* Configurar estoque;
+* Configurar limite por pessoa;
+* Configurar retirada ou entrega;
+* Configurar cupons;
+* Configurar lotes;
+* Configurar preço promocional;
+* Configurar período de venda;
+* Configurar disponibilidade;
+* Validar o checkout;
+* Reduzir abandono de compra.
+
+## 4.6 Engenheiro Full-stack
+
+Responsável por:
+
+* Implementar a aplicação;
+* Criar componentes reutilizáveis;
+* Criar banco de dados;
+* Implementar autenticação e permissões;
+* Implementar painel administrativo;
+* Implementar APIs;
+* Implementar webhooks;
+* Implementar integração de pagamento;
+* Garantir segurança;
+* Criar testes;
+* Criar logs;
+* Criar tratamento de erros;
+* Documentar o código.
+
+## 4.7 QA e Especialista em Segurança
+
+Responsável por:
+
+* Testar todos os fluxos;
+* Testar pagamento;
+* Testar pedidos duplicados;
+* Testar webhooks repetidos;
+* Testar estoque;
+* Testar encerramento da campanha;
+* Testar responsividade;
+* Testar permissões;
+* Testar acesso administrativo;
+* Verificar exposição de dados sensíveis;
+* Verificar variáveis de ambiente;
+* Verificar validação dos formulários;
+* Verificar acessibilidade básica;
+* Produzir checklist para publicação.
+
+## 4.8 Analista de Dados e Operações
+
+Responsável por:
+
+* Definir métricas;
+* Criar relatórios;
+* Criar exportações;
+* Acompanhar pagamentos;
+* Acompanhar estoque;
+* Acompanhar pedidos;
+* Acompanhar entregas;
+* Acompanhar participantes;
+* Criar visão consolidada das campanhas.
+
+---
+
+# 5. Funcionamento do Squad
+
+O Squad deverá operar por meio de um fluxo estruturado.
+
+## Etapa 1 — Receber briefing
+
+O funcionário preencherá um formulário no aplicativo administrativo.
+
+## Etapa 2 — Validar briefing
+
+O sistema verificará se existem informações suficientes para criar a campanha.
+
+## Etapa 3 — Gerar proposta
+
+O Squad deverá produzir:
+
+* Resumo da campanha;
+* Público-alvo;
+* Oferta;
+* Estrutura sugerida;
+* Copy inicial;
+* Template recomendado;
+* Produtos;
+* Preços;
+* Variações;
+* Regras de entrega;
+* Datas;
+* Perguntas frequentes.
+
+## Etapa 4 — Revisão humana
+
+Nenhum conteúdo poderá ser publicado automaticamente sem revisão de um funcionário autorizado.
+
+O funcionário poderá:
+
+* Editar textos;
+* Trocar imagens;
+* Alterar preços;
+* Alterar datas;
+* Alterar produtos;
+* Alterar seções;
+* Visualizar a página;
+* Aprovar ou rejeitar a publicação.
+
+## Etapa 5 — Preview
+
+O sistema deverá apresentar:
+
+* Preview para desktop;
+* Preview para tablet;
+* Preview para celular;
+* Simulação do carrinho;
+* Simulação do checkout;
+* Simulação de campanha ativa;
+* Simulação de campanha encerrada.
+
+## Etapa 6 — Publicação
+
+Depois da aprovação, a campanha poderá ser publicada em URL própria.
+
+Exemplos:
+
+* `/campanhas/camisa-preta-2026`
+* `/campanhas/festa-junina-2026`
+* `/campanhas/vip-pampulha-2026`
+* `/campanhas/recovery-pos-prova`
+* `/campanhas/programa-corporativo-empresa-x`
+
+## Etapa 7 — Acompanhamento
+
+Depois da publicação, o painel deverá acompanhar vendas, pagamentos e operação.
+
+## Etapa 8 — Encerramento
+
+Ao atingir a data final ou estoque máximo, a campanha deverá:
+
+* Interromper novas vendas;
+* Preservar os pedidos anteriores;
+* Mostrar uma página de campanha encerrada;
+* Permitir reabertura somente por usuário autorizado;
+* Registrar quem realizou a reabertura.
+
+---
+
+# 6. Aplicativo web para os funcionários
+
+Criar um aplicativo administrativo protegido por autenticação.
+
+## 6.1 Perfis de acesso
+
+Implementar, no mínimo:
+
+### Administrador
+
+Pode:
+
+* Gerenciar usuários;
+* Criar campanhas;
+* Editar campanhas;
+* Publicar;
+* Encerrar;
+* Reabrir;
+* Alterar configurações financeiras;
+* Visualizar todas as vendas;
+* Exportar dados;
+* Cancelar pedidos;
+* Realizar estornos quando a integração permitir;
+* Acessar logs e auditoria.
+
+### Gestor de campanha
+
+Pode:
+
+* Criar campanhas;
+* Editar campanhas;
+* Fazer upload de imagens;
+* Configurar produtos;
+* Visualizar pedidos;
+* Exportar pedidos;
+* Publicar somente quando autorizado.
+
+### Editor de conteúdo
+
+Pode:
+
+* Editar copy;
+* Editar imagens;
+* Editar perguntas frequentes;
+* Visualizar preview;
+* Não pode alterar integrações financeiras.
+
+### Operação
+
+Pode:
+
+* Visualizar pedidos;
+* Confirmar entrega;
+* Confirmar retirada;
+* Atualizar status operacional;
+* Exportar listas;
+* Não pode alterar preços ou publicar campanhas.
+
+### Visualizador
+
+Pode apenas consultar dashboards e relatórios.
+
+Utilize controle de acesso por função, preferencialmente com RBAC.
+
+---
+
+# 7. Formulário de criação da campanha
+
+Criar um wizard dividido em etapas.
+
+## Etapa 1 — Informações gerais
+
+Campos:
+
+* Nome interno da campanha;
+* Nome público;
+* Slug;
+* Tipo de campanha;
+* Objetivo;
+* Público-alvo;
+* Responsável;
+* Data de início;
+* Data de encerramento;
+* Data prevista de entrega ou realização;
+* Campanha pública ou restrita;
+* Status.
+
+## Etapa 2 — Tipo de venda
+
+Opções:
+
+* Produto físico;
+* Produto digital;
+* Serviço;
+* Evento;
+* Ingresso;
+* Inscrição;
+* Reserva de horário;
+* Espaço VIP;
+* Recovery;
+* Programa corporativo;
+* Campanha gratuita com inscrição;
+* Outro.
+
+## Etapa 3 — Oferta
+
+Campos:
+
+* Produto ou serviço;
+* Descrição;
+* Preço;
+* Preço promocional;
+* Combo;
+* Lotes;
+* Quantidade disponível;
+* Estoque;
+* Limite por comprador;
+* Cupom;
+* Benefícios;
+* Itens inclusos;
+* Itens não inclusos.
+
+## Etapa 4 — Variações
+
+Permitir criar variações configuráveis, como:
+
+* Modelo;
+* Tamanho;
+* Cor;
+* Gênero;
+* Horário;
+* Data;
+* Local;
+* Categoria;
+* Distância;
+* Modalidade;
+* Tipo de ingresso;
+* Tipo de atendimento;
+* Sessão;
+* Lote;
+* Outro atributo personalizado.
+
+Não criar colunas fixas no banco para cada possível variação. Utilizar uma arquitetura flexível de atributos e opções.
+
+## Etapa 5 — Entrega ou participação
+
+Configurações:
+
+* Retirada;
+* Correios;
+* Entrega local;
+* Frete fixo;
+* Frete calculado;
+* Produto sem entrega;
+* Evento presencial;
+* Evento online;
+* Endereço;
+* Instruções;
+* Prazo;
+* Horários disponíveis;
+* Lista de participantes.
+
+## Etapa 6 — Conteúdo e copy
+
+Campos editáveis:
+
+* Headline;
+* Subheadline;
+* Texto principal;
+* Benefícios;
+* História da campanha;
+* Descrição dos produtos;
+* Chamadas para ação;
+* Informações importantes;
+* Perguntas frequentes;
+* Política de cancelamento;
+* Política de troca;
+* Mensagem de encerramento.
+
+O funcionário poderá pedir ao Squad que gere uma primeira versão da copy a partir do briefing.
+
+## Etapa 7 — Imagens e mídia
+
+Permitir:
+
+* Upload de imagem principal;
+* Upload de imagens dos produtos;
+* Galeria;
+* Imagem para compartilhamento;
+* Vídeo;
+* Logos de parceiros;
+* Texto alternativo;
+* Reordenação das imagens;
+* Compressão automática;
+* Validação de formato e tamanho.
+
+## Etapa 8 — Formulário do comprador
+
+Permitir selecionar os campos obrigatórios:
+
+* Nome;
+* CPF;
+* E-mail;
+* Telefone;
+* Data de nascimento;
+* Endereço;
+* Cidade;
+* Estado;
+* CEP;
+* Tamanho;
+* Modalidade;
+* Equipe;
+* Empresa;
+* Matrícula do funcionário;
+* Contato de emergência;
+* Restrições;
+* Observações;
+* Campos personalizados.
+
+CPF e outros dados pessoais somente devem ser solicitados quando realmente necessários.
+
+## Etapa 9 — Pagamento
+
+Permitir configurar:
+
+* Pix;
+* Cartão, quando disponível;
+* Campanha gratuita;
+* Pagamento externo;
+* Pagamento no local;
+* Prazo de pagamento;
+* Expiração do Pix;
+* Desconto;
+* Acréscimo;
+* Instruções financeiras.
+
+As credenciais de pagamento nunca poderão ser informadas diretamente no formulário da campanha. Devem ser configuradas com segurança no ambiente da aplicação.
+
+## Etapa 10 — Revisão e publicação
+
+Apresentar:
+
+* Checklist;
+* Pendências;
+* Preview;
+* Teste de compra;
+* Teste de pagamento;
+* Confirmação de publicação.
+
+---
+
+# 8. Templates de landing page
+
+Criar uma biblioteca de templates reutilizáveis.
+
+## Template 1 — Produto físico
+
+Adequado para:
+
+* Camisas;
+* Uniformes;
+* Regatas;
+* Kits;
+* Produtos comemorativos.
+
+Recursos:
+
+* Galeria;
+* Variações;
+* Estoque;
+* Combo;
+* Carrinho;
+* Entrega;
+* Retirada.
+
+## Template 2 — Evento e festa
+
+Adequado para:
+
+* Festa junina;
+* Festa de final de ano;
+* Confraternizações;
+* Eventos sociais.
+
+Recursos:
+
+* Data;
+* Local;
+* Mapa;
+* Programação;
+* Lotes;
+* Ingressos;
+* Acompanhantes;
+* Limite de participantes;
+* Lista de presença.
+
+## Template 3 — Espaço VIP em prova
+
+Recursos:
+
+* Prova relacionada;
+* Localização;
+* Estrutura oferecida;
+* Horário de funcionamento;
+* Benefícios;
+* Tipos de acesso;
+* Quantidade limitada;
+* Inclusão de acompanhantes;
+* Termos específicos.
+
+## Template 4 — Recovery
+
+Recursos:
+
+* Descrição do serviço;
+* Técnicas oferecidas;
+* Agenda;
+* Sessões;
+* Profissionais;
+* Duração;
+* Horários;
+* Limite de vagas;
+* Orientações prévias;
+* Restrições.
+
+## Template 5 — Programa corporativo
+
+Adequado para empresas que oferecem treinamento esportivo aos funcionários.
+
+Recursos:
+
+* Apresentação institucional;
+* Modalidades;
+* Benefícios para a empresa;
+* Benefícios para os funcionários;
+* Formato do programa;
+* Número de participantes;
+* Solicitação de proposta;
+* Captura de lead;
+* Contato comercial;
+* Possibilidade de página restrita por empresa.
+
+## Template 6 — Campanha personalizada
+
+Permitir criar uma campanha utilizando blocos modulares.
+
+Blocos disponíveis:
+
+* Hero;
+* Texto;
+* Imagem;
+* Vídeo;
+* Benefícios;
+* Produtos;
+* Serviços;
+* Tabela de preços;
+* Programação;
+* Depoimentos;
+* Parceiros;
+* Localização;
+* Perguntas frequentes;
+* Formulário;
+* Carrinho;
+* Checkout;
+* Contagem regressiva;
+* Aviso;
+* Chamada para WhatsApp;
+* Rodapé.
+
+Os blocos devem poder ser ativados, desativados e reordenados.
+
+---
+
+# 9. Painel administrativo de cada campanha
+
+Toda campanha deverá possuir painel próprio.
+
+## Dashboard
+
+Exibir:
+
+* Faturamento bruto;
+* Faturamento líquido, quando calculável;
+* Número de pedidos;
+* Pedidos pagos;
+* Pedidos pendentes;
+* Pedidos expirados;
+* Pedidos cancelados;
+* Ticket médio;
+* Quantidade de itens vendidos;
+* Estoque restante;
+* Conversão;
+* Vendas por dia;
+* Vendas por produto;
+* Vendas por variação;
+* Vendas por forma de entrega;
+* Vendas por forma de pagamento.
+
+## Gestão de pedidos
+
+Permitir:
+
+* Pesquisar;
+* Filtrar;
+* Ordenar;
+* Abrir detalhes;
+* Alterar status operacional;
+* Confirmar retirada;
+* Confirmar entrega;
+* Reenviar instruções;
+* Adicionar observações internas;
+* Cancelar pedido;
+* Exportar CSV ou Excel.
+
+## Status do pedido
+
+Utilizar estados claros:
+
+* Rascunho;
+* Aguardando pagamento;
+* Pago;
+* Pagamento expirado;
+* Em preparação;
+* Pronto para retirada;
+* Enviado;
+* Entregue;
+* Participação confirmada;
+* Cancelado;
+* Reembolsado.
+
+Separar o status financeiro do status operacional.
+
+## Auditoria
+
+Registrar:
+
+* Usuário;
+* Ação;
+* Data e hora;
+* Valor anterior;
+* Novo valor;
+* Campanha relacionada;
+* Pedido relacionado;
+* IP ou informações técnicas relevantes, quando permitido.
+
+---
+
+# 10. Gestão global
+
+Criar uma visão geral com:
+
+* Todas as campanhas;
+* Campanhas em rascunho;
+* Campanhas agendadas;
+* Campanhas ativas;
+* Campanhas pausadas;
+* Campanhas encerradas;
+* Faturamento por campanha;
+* Total de pedidos;
+* Comparação entre campanhas;
+* Produtos mais vendidos;
+* Próximos eventos;
+* Alertas de estoque;
+* Alertas de pagamento;
+* Pendências operacionais.
+
+---
+
+# 11. Modelo de dados
+
+Criar um modelo de dados flexível, normalizado e documentado.
+
+Considere entidades como:
+
+* users;
+* roles;
+* permissions;
+* user_roles;
+* campaigns;
+* campaign_templates;
+* campaign_sections;
+* campaign_assets;
+* products;
+* product_variants;
+* product_options;
+* product_option_values;
+* campaign_products;
+* prices;
+* inventories;
+* coupons;
+* orders;
+* order_items;
+* customers;
+* payments;
+* payment_events;
+* deliveries;
+* event_participants;
+* custom_fields;
+* custom_field_values;
+* campaign_members;
+* audit_logs;
+* notifications;
+* webhooks.
+
+Não implemente o modelo cegamente. Primeiro verifique o banco atual e prepare uma migração segura.
+
+Criar:
+
+`docs/MODELO-DE-DADOS.md`
+
+Inclua:
+
+* Entidades;
+* Relacionamentos;
+* Regras;
+* Índices;
+* Restrições;
+* Estratégia de migração;
+* Diagrama Mermaid.
+
+---
+
+# 12. Requisitos técnicos
+
+Utilize preferencialmente a stack já existente no projeto.
+
+Caso o projeto utilize Next.js, TypeScript, Supabase e Vercel, preserve essa stack, salvo impedimento técnico documentado.
+
+Requisitos:
+
+* TypeScript estrito;
+* Componentes reutilizáveis;
+* Validação de entrada;
+* Tratamento padronizado de erros;
+* Responsividade;
+* Acessibilidade;
+* SEO;
+* Open Graph;
+* URLs amigáveis;
+* Imagens otimizadas;
+* Lazy loading;
+* Logs;
+* Auditoria;
+* Testes automatizados;
+* Proteção de rotas;
+* Políticas de acesso ao banco;
+* Webhooks idempotentes;
+* Proteção contra pedidos duplicados;
+* Controle transacional de estoque;
+* Separação entre configurações públicas e segredos;
+* Variáveis de ambiente documentadas;
+* Ambientes de homologação e produção.
+
+Não colocar chaves, tokens, certificados ou segredos no código.
+
+Caso utilize Supabase:
+
+* Criar migrations;
+* Criar Row Level Security;
+* Criar policies;
+* Separar acesso público e administrativo;
+* Impedir que usuários públicos consultem pedidos de terceiros;
+* Impedir alteração de preço pelo navegador;
+* Validar valores no servidor.
+
+---
+
+# 13. Pagamentos
+
+Reutilize a integração de pagamento existente quando ela estiver correta.
+
+O fluxo deverá seguir, de forma segura:
+
+1. Cliente inicia o pedido.
+2. O servidor consulta os preços válidos.
+3. O servidor calcula o total.
+4. O pedido é criado como aguardando pagamento.
+5. A cobrança é criada no provedor.
+6. O cliente recebe o QR Code ou instrução.
+7. O webhook confirma o pagamento.
+8. O webhook é validado.
+9. O processamento é idempotente.
+10. O pedido é marcado como pago.
+11. O estoque é confirmado.
+12. O cliente recebe a confirmação.
+
+Nunca confiar em preço, desconto ou total enviados somente pelo frontend.
+
+Registrar todos os eventos de pagamento sem armazenar informações sensíveis desnecessárias.
+
+Criar procedimentos para:
+
+* Pix expirado;
+* Pagamento duplicado;
+* Webhook repetido;
+* Pagamento confirmado depois do encerramento;
+* Falha de comunicação;
+* Cancelamento;
+* Reembolso;
+* Divergência de valor.
+
+---
+
+# 14. Comunicação com o cliente
+
+Preparar estrutura para:
+
+* Confirmação de pedido;
+* Pagamento pendente;
+* Pagamento confirmado;
+* Pix expirado;
+* Pedido pronto para retirada;
+* Pedido enviado;
+* Inscrição confirmada;
+* Lembrete de evento;
+* Cancelamento;
+* Reembolso.
+
+Os canais podem incluir:
+
+* E-mail;
+* WhatsApp;
+* Tela de confirmação.
+
+Não implementar disparos de WhatsApp não oficiais.
+
+Criar templates editáveis por campanha.
+
+---
+
+# 15. Inteligência artificial e geração de conteúdo
+
+A inteligência artificial deverá auxiliar o funcionário, mas não publicar diretamente.
+
+Recursos desejados:
+
+* Gerar briefing estruturado;
+* Sugerir headline;
+* Gerar copy;
+* Gerar descrição dos produtos;
+* Sugerir perguntas frequentes;
+* Sugerir estrutura da página;
+* Sugerir template;
+* Revisar clareza;
+* Revisar ortografia;
+* Criar mensagens de divulgação;
+* Criar descrição para Instagram;
+* Criar mensagem para WhatsApp;
+* Criar e-mail de lançamento.
+
+Todo conteúdo gerado deverá:
+
+* Ser editável;
+* Exibir que foi gerado por IA;
+* Exigir aprovação humana;
+* Manter histórico de versões;
+* Evitar informações não fornecidas pelo funcionário;
+* Não inventar benefícios, preços, datas ou regras.
+
+---
+
+# 16. Experiência visual
+
+Preserve a identidade visual da Teo Esportes:
+
+* Visual esportivo;
+* Aparência premium;
+* Uso consistente da marca;
+* Boa presença de imagens;
+* Tipografia forte;
+* Movimento moderado;
+* Responsividade;
+* Chamadas para ação claras.
+
+Permita customização controlada por campanha:
+
+* Cor principal;
+* Cor secundária;
+* Imagem principal;
+* Estilo do hero;
+* Ordem das seções;
+* Estilo dos cards;
+* Exibição de contagem regressiva;
+* Exibição de parceiros.
+
+As customizações não poderão prejudicar acessibilidade, legibilidade ou identidade da marca.
+
+---
+
+# 17. Regras importantes
+
+1. Não criar uma aplicação separada para cada campanha.
+2. Não duplicar páginas manualmente.
+3. Não armazenar conteúdo da campanha diretamente em componentes.
+4. As páginas devem ser renderizadas com base nos dados da campanha.
+5. Produtos, preços, textos, imagens e datas devem ser administráveis.
+6. O painel não pode depender de alteração de código.
+7. Toda publicação deve ter preview e aprovação.
+8. Toda alteração relevante deve gerar log.
+9. Toda campanha deve poder ser duplicada.
+10. Campanhas encerradas devem permanecer disponíveis para consulta interna.
+11. O sistema deve suportar campanhas sem carrinho.
+12. O sistema deve suportar campanhas gratuitas.
+13. O sistema deve suportar captura de leads.
+14. O sistema deve suportar produtos com e sem estoque.
+15. O sistema deve suportar vendas com datas e lotes.
+16. O sistema deve suportar páginas públicas e páginas restritas.
+17. O sistema deve ser preparado para futuras integrações.
+
+---
+
+# 18. Testes obrigatórios
+
+Criar testes para:
+
+* Login;
+* Permissões;
+* Criação da campanha;
+* Edição;
+* Duplicação;
+* Preview;
+* Publicação;
+* Pausa;
+* Encerramento;
+* Reabertura;
+* Produto simples;
+* Produto com variação;
+* Combo;
+* Estoque;
+* Carrinho;
+* Cupom;
+* Pedido;
+* Pix;
+* Webhook;
+* Pagamento duplicado;
+* Exportação;
+* Formulários;
+* Mobile;
+* Acessibilidade básica.
+
+Criar também um roteiro de teste manual em:
+
+`docs/PLANO-DE-TESTES.md`
+
+---
+
+# 19. Documentação obrigatória
+
+Produzir:
+
+* `README.md`;
+* `docs/ANALISE-PROJETO-ATUAL.md`;
+* `docs/ARQUITETURA.md`;
+* `docs/MODELO-DE-DADOS.md`;
+* `docs/FLUXO-DO-SQUAD.md`;
+* `docs/GUIA-DO-ADMINISTRADOR.md`;
+* `docs/GUIA-DE-CRIACAO-DE-CAMPANHA.md`;
+* `docs/INTEGRACAO-DE-PAGAMENTOS.md`;
+* `docs/SEGURANCA.md`;
+* `docs/PLANO-DE-TESTES.md`;
+* `.env.example`.
+
+O guia do administrador deve ser escrito para funcionários que não são programadores.
+
+---
+
+# 20. Ordem de execução
+
+Execute o trabalho nesta ordem:
+
+## Fase 1 — Descoberta
+
+* Analisar o projeto;
+* Mapear arquitetura;
+* Mapear funcionalidades;
+* Identificar riscos;
+* Criar documentação inicial.
+
+## Fase 2 — Planejamento
+
+* Propor arquitetura;
+* Propor modelo de dados;
+* Criar backlog;
+* Criar histórias de usuário;
+* Criar critérios de aceite;
+* Separar MVP e evoluções futuras.
+
+## Fase 3 — Fundação
+
+* Autenticação;
+* Perfis;
+* Banco;
+* Permissões;
+* Auditoria;
+* Estrutura de campanhas;
+* Biblioteca de componentes.
+
+## Fase 4 — Campaign Builder
+
+* Wizard;
+* Editor de conteúdo;
+* Produtos;
+* Variações;
+* Imagens;
+* Preview;
+* Templates.
+
+## Fase 5 — Venda
+
+* Carrinho;
+* Checkout;
+* Pedidos;
+* Pagamentos;
+* Webhooks;
+* Estoque;
+* Confirmações.
+
+## Fase 6 — Administração
+
+* Dashboard;
+* Pedidos;
+* Relatórios;
+* Exportações;
+* Operação;
+* Gestão global.
+
+## Fase 7 — Qualidade
+
+* Testes;
+* Segurança;
+* Responsividade;
+* Acessibilidade;
+* Performance;
+* Documentação.
+
+---
+
+# 21. Escopo do MVP
+
+O MVP deverá incluir:
+
+* Login;
+* Perfis básicos;
+* Criação de campanha;
+* Edição;
+* Duplicação;
+* Produto físico;
+* Evento;
+* Serviço;
+* Produtos com variações;
+* Imagens;
+* Copy editável;
+* Landing page dinâmica;
+* Carrinho opcional;
+* Pix;
+* Pedidos;
+* Painel administrativo;
+* Exportação;
+* Encerramento automático;
+* Preview;
+* Logs básicos.
+
+Não tente implementar todas as evoluções avançadas antes de concluir um MVP funcional.
+
+---
+
+# 22. Entrega inicial esperada
+
+Antes de implementar todo o sistema, apresente:
+
+1. Diagnóstico do projeto atual;
+2. Arquitetura recomendada;
+3. Estrutura do Squad;
+4. Fluxo de funcionamento;
+5. Modelo de dados inicial;
+6. Mapa de telas;
+7. Backlog priorizado;
+8. Definição do MVP;
+9. Riscos técnicos;
+10. Plano de migração da landing page atual;
+11. Lista dos arquivos que serão criados ou modificados.
+
+Depois disso, prossiga com a implementação do MVP sem apagar funcionalidades existentes.
+
+Durante o desenvolvimento:
+
+* Faça alterações incrementais;
+* Teste cada etapa;
+* Utilize commits pequenos e descritivos;
+* Não use dados simulados em funcionalidades marcadas como concluídas;
+* Não declare uma integração pronta sem testá-la;
+* Informe claramente qualquer dependência externa;
+* Mantenha a aplicação atual funcionando durante a migração.
+
+O resultado final deve ser uma plataforma reutilizável para que a Teo Esportes consiga criar novas campanhas de vendas e inscrições rapidamente, com autonomia para os funcionários e sem precisar solicitar alterações de código para cada novo produto, serviço ou evento.
