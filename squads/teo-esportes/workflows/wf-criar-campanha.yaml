@@ -1,0 +1,214 @@
+# Workflow — Criar Campanha de Vendas
+# Implementa o fluxo de 8 etapas do briefing §5, com checkpoints e veto conditions.
+# Fluxo unidirecional: reprovação devolve artefato à fase de origem, nunca improvisa adiante.
+#
+# v1.1.0 — Normalizado para o schema canônico AIOX (workflow.sequence como contrato
+# de execução). Conteúdo semântico (checkpoints, veto conditions, gates) preservado
+# integralmente da v1.0.0.
+
+workflow:
+  id: wf-criar-campanha
+  name: "Criação de Campanha de Vendas — Teo Esportes"
+  version: "1.1.0"
+  type: squad-campaign
+  squad: teo-esportes
+  entry_agent: teo-triagem
+  duration_estimate: "1-2 sessões (proposta) + revisão humana"
+
+  description: >-
+    Do pedido bruto ("quero vender X") até a campanha publicada e acompanhada.
+    Toda geração de conteúdo é rascunho; publicação exige aprovação humana
+    (Etapa 4) e checklist de QA (Etapa 6).
+
+  metadata:
+    elicit: true
+    confirmation_required: true
+    human_gates: [revisao_humana, publicacao]
+    fluxo: "Unidirecional — reprovação devolve o artefato à fase de origem do problema"
+
+  phases:
+    - phase_1: "Triagem e briefing inicial (Etapas 1-2)"
+    - phase_2: "Briefing estruturado e validação (Etapa 2)"
+    - phase_3: "Geração da proposta (Etapa 3)"
+    - phase_4: "Revisão humana (Etapa 4) — GATE INEGOCIÁVEL"
+    - phase_5: "Preview (Etapa 5)"
+    - phase_6: "Publicação (Etapa 6) — GATE DE QA"
+    - phase_7: "Acompanhamento (Etapa 7)"
+    - phase_8: "Encerramento (Etapa 8)"
+
+  sequence:
+    - step: triagem_campanha
+      id: triagem
+      phase: 1
+      agent: teo-triagem
+      action: "Classificar situação de venda e resolver template/prompt pack"
+      tasks: [tasks/triagem-campanha.md]
+      inputs: ["Descrição da campanha pelo funcionário (formulário ou texto livre)"]
+      creates: resultado-triagem
+      outputs: ["Resultado da triagem (output_schema de data/heuristicas-triagem.yaml)"]
+      checkpoint:
+        validacao: "Situação classificada com regra citada; template/prompt pack resolvidos"
+        veto_conditions:
+          - "confianca == baixa sem confirmação humana (VT01)"
+          - "situacao == personalizada sem modelo_venda definido (VT03)"
+      next: briefing
+
+    - step: briefing_estruturado
+      id: briefing
+      phase: 2
+      agent: teo-pm
+      action: "Preencher briefing estruturado e validar completude"
+      requires: resultado-triagem
+      inputs: ["Resultado da triagem", "Informações do funcionário"]
+      creates: briefing-campanha
+      outputs: ["templates/briefing-campanha-tmpl.md preenchido com veredito"]
+      checkpoint:
+        validacao: "Veredito COMPLETO no bloco 13 (checklists/checklist-briefing-completo.md)"
+        veto_conditions:
+          - "Campo obrigatório da situação pendente (VT02)"
+          - "Datas inconsistentes"
+          - "Credencial de pagamento presente no briefing"
+      next: proposta
+
+    - step: geracao_proposta
+      id: proposta
+      phase: 3
+      agent: teo-estrategista/teo-copywriter/teo-ux/teo-ecommerce
+      action: "Gerar proposta completa da campanha (estratégia, copy, UX, modelo de venda)"
+      requires: briefing-campanha
+      ordem:
+        - "teo-estrategista: gerar_proposta + gatilhos_aprovados"
+        - "teo-copywriter: gerar_copy_lp + gerar_faq + gerar_mensagens (prompt pack da situação)"
+        - "teo-ux: estrutura de seções + customizações dentro do Design System"
+        - "teo-ecommerce: configuração do modelo de venda"
+      creates: proposta-campanha
+      outputs: ["templates/proposta-campanha-tmpl.md completo"]
+      checkpoint:
+        validacao: "Proposta com todas as seções; pendências consolidadas na seção 11"
+        veto_conditions:
+          - "Copy sem proposta_valor/gatilhos_aprovados do estrategista"
+          - "Gatilho sem lastro"
+          - "Configuração de venda incompatível com a situação (ex.: carrinho em lead)"
+      next: revisao_humana
+
+    - step: revisao_humana
+      id: revisao_humana
+      phase: 4
+      agent: teo-triagem
+      action: "Coletar revisão e aprovação humana da proposta — GATE INEGOCIÁVEL"
+      executor: humano
+      human_gate: true
+      requires: proposta-campanha
+      acoes_permitidas: ["editar textos", "trocar imagens", "alterar preços/datas/produtos/seções", "aprovar", "rejeitar"]
+      creates: proposta-aprovada
+      outputs: ["Proposta aprovada com registro de quem aprovou"]
+      notes: |
+        O agente teo-triagem apenas orquestra a coleta da decisão; quem revisa,
+        edita e aprova é o humano. Nada avança sem aprovação registrada.
+      checkpoint:
+        validacao: "Checklist de aprovação da proposta assinado"
+        veto_conditions:
+          - "Qualquer [PENDENTE] não resolvido"
+          - "Ausência de registro de aprovador"
+      on_reject: "Retorna à fase de origem do problema (copy → proposta; briefing → briefing)"
+      next: preview
+
+    - step: preview_campanha
+      id: preview
+      phase: 5
+      agent: teo-ux/teo-qa
+      action: "Gerar previews e simular estados da campanha"
+      requires: proposta-aprovada
+      creates: previews-validados
+      outputs: ["Previews desktop/tablet/celular; simulações carrinho/checkout/ativa/encerrada"]
+      checkpoint:
+        validacao: "4 simulações + 3 viewports verificados"
+        veto_conditions:
+          - "Estado 'campanha encerrada' não simulado"
+          - "Falha de acessibilidade bloqueante (contraste, alt-text)"
+      next: publicacao
+
+    - step: publicacao_campanha
+      id: publicacao
+      phase: 6
+      agent: teo-qa
+      action: "Executar checklist de publicação e publicar campanha — GATE DE QA"
+      human_gate: true
+      tasks: [tasks/validar-publicacao.md]
+      requires: previews-validados
+      creates: campanha-publicada
+      outputs: ["Checklist de publicação PASS", "Campanha publicada em /campanhas/{slug}"]
+      checkpoint:
+        validacao: "checklists/checklist-publicacao.md 100% PASS com evidências"
+        veto_conditions:
+          - "Qualquer item FAIL"
+          - "Teste de compra/pagamento não executado em homologação"
+          - "Publicador sem permissão RBAC de publicação"
+      next: acompanhamento
+
+    - step: acompanhamento_campanha
+      id: acompanhamento
+      phase: 7
+      agent: teo-dados
+      action: "Ativar dashboard, alertas e exports da campanha"
+      requires: campanha-publicada
+      creates: dashboard-campanha
+      outputs: ["Dashboard da campanha ativo", "Alertas configurados", "Exports operacionais"]
+      checkpoint:
+        validacao: "Métricas adequadas à situação de venda; alertas com dono"
+      next: encerramento
+
+    - step: encerramento_campanha
+      id: encerramento
+      phase: 8
+      agent: teo-dados/teo-qa
+      action: "Encerrar campanha, preservar pedidos e emitir relatório final"
+      requires: campanha-publicada
+      gatilhos: ["data_encerramento atingida", "estoque/vagas esgotados"]
+      creates: relatorio-final
+      outputs:
+        - "Vendas interrompidas; pedidos anteriores preservados"
+        - "Página de campanha encerrada no ar"
+        - "Relatório final da campanha (teo-dados)"
+      checkpoint:
+        validacao: "Encerramento automático verificado; reabertura somente por usuário autorizado com log"
+        veto_conditions:
+          - "Reabertura sem registro de quem reabriu"
+
+  handoff_prompts:
+    triagem_to_briefing: >-
+      Triagem concluída: situação "{situacao}" classificada com regra citada e
+      confiança {confianca}. Template e prompt pack resolvidos. @teo-pm: preencher
+      templates/briefing-campanha-tmpl.md com os dados da triagem e do funcionário.
+    briefing_to_proposta: >-
+      Briefing COMPLETO (bloco 13 assinado, checklist-briefing-completo PASS).
+      Squad de proposta: executar na ordem estrategista → copywriter → ux →
+      ecommerce. Lacunas viram [PENDENTE], nunca invenção.
+    proposta_to_revisao: >-
+      Proposta completa em templates/proposta-campanha-tmpl.md com pendências
+      consolidadas na seção 11. Encaminhar ao revisor humano para edição e
+      aprovação registrada. NADA publica sem este gate.
+    revisao_to_preview: >-
+      Proposta aprovada por {aprovador} em {data}. @teo-ux + @teo-qa: gerar
+      previews (3 viewports) e simular 4 estados (carrinho, checkout, ativa,
+      encerrada).
+    preview_to_publicacao: >-
+      Previews e simulações verificados. @teo-qa: executar
+      checklists/checklist-publicacao.md — publicação somente com 100% PASS e
+      evidências, incluindo teste de pagamento em homologação e RBAC do publicador.
+    publicacao_to_acompanhamento: >-
+      Campanha publicada em /campanhas/{slug} com checklist PASS. @teo-dados:
+      ativar dashboard, configurar alertas com dono e exports operacionais.
+    acompanhamento_to_encerramento: >-
+      Gatilho de encerramento atingido (data ou estoque/vagas). @teo-dados +
+      @teo-qa: interromper vendas preservando pedidos, publicar página de
+      encerramento e emitir relatório final.
+
+  handoffs:
+    regra: "Zero gap: cada fase entrega artefato nomeado à fase seguinte no mesmo fluxo"
+    em_falha: "Artefato volta para a fase DONA do problema com lista objetiva do que falta"
+
+  completion_criteria:
+    - "Campanha publicada com checklist PASS e aprovação humana registrada"
+    - "Dashboard e alertas ativos"
+    - "Encerramento automático configurado e testado"

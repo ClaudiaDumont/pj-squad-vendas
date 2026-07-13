@@ -1,0 +1,74 @@
+# Contrato dos Prompt Packs — Squad Teo Esportes
+# Artefato PRODUTIZÁVEL #2: define o schema comum a todos os packs em prompts/*.yaml.
+# O app (Fase 2) consome cada prompt via API montando: system + template renderizado com variables.
+
+schema_version: "1.0"
+id: contrato-prompt-packs-teo
+metadata:
+  squad: teo-esportes
+  version: "1.0.0"
+  created: "2026-07-13"
+
+# Estrutura obrigatória de cada pack (prompts/{situacao}.yaml):
+pack_schema:
+  id: "string — prompt-pack-{situacao}"
+  situacao: "string — id em data/situacoes-venda.yaml"
+  version: "semver"
+  prompts:
+    "{prompt_id}":
+      descricao: "string"
+      agente_padrao: "string — agente do squad que executa (ex.: @teo-copywriter)"
+      input_variables: "lista de variáveis obrigatórias (validar antes de renderizar)"
+      input_variables_opcionais: "lista de variáveis opcionais"
+      system: "string — persona e regras (herda guardrails globais abaixo)"
+      template: "string — user prompt com placeholders {{variavel}}"
+      output_format: "markdown | json | yaml"
+      output_schema: "descrição/estrutura esperada do output"
+
+# Prompts padrão que TODO pack deve implementar:
+prompts_obrigatorios:
+  - gerar_proposta        # Etapa 3 do fluxo — proposta completa da campanha
+  - gerar_copy_lp         # Copy completa da landing page (usa copy_template da situação)
+  - gerar_faq             # Perguntas frequentes específicas
+  - gerar_mensagens       # Mensagens transacionais (confirmação, pagamento, encerramento)
+  - gerar_divulgacao      # WhatsApp, Instagram e e-mail de lançamento
+
+# Guardrails globais — TODO system prompt herda estas regras (briefing §15):
+guardrails_globais: |
+  REGRAS INEGOCIÁVEIS:
+  1. NUNCA inventar benefícios, preços, datas, quantidades, regras ou condições
+     que não estejam nas variáveis de entrada. Se faltar informação, marcar
+     [PENDENTE: descrição do que falta] no output — nunca preencher com suposição.
+  2. NUNCA criar promessas falsas, garantias de resultado ou urgência artificial.
+     Urgência só quando houver limite real (estoque, vagas, data) informado no input.
+  3. Todo conteúdo gerado é RASCUNHO: será revisado e aprovado por humano antes
+     de publicar. Nunca afirmar que o conteúdo está publicado ou aprovado.
+  4. Escrever em português brasileiro, tom esportivo e premium da Teo Esportes:
+     direto, energético, acolhedor com a comunidade de alunos, sem gírias forçadas.
+  5. Copy específica por campanha: proibido texto genérico reaproveitável em
+     qualquer campanha trocando só o nome do produto.
+  6. Não solicitar nem mencionar dados pessoais desnecessários (CPF apenas
+     quando o input indicar necessidade real).
+  7. Respeitar as políticas informadas (cancelamento, troca, reembolso).
+     Se não informadas, marcar como [PENDENTE].
+
+# Variáveis comuns disponíveis em todos os packs (originadas do briefing validado):
+variaveis_comuns:
+  - campanha_nome_publico
+  - campanha_objetivo
+  - publico_alvo
+  - data_inicio
+  - data_encerramento
+  - proposta_valor          # do @teo-estrategista
+  - posicionamento          # do @teo-estrategista
+  - gatilhos_aprovados      # lista de gatilhos reais validados pelo estrategista
+  - tom_de_voz              # padrão: "teo-esportes-default"
+  - informacoes_importantes # avisos, políticas, restrições
+
+# Metadados de execução recomendados para o app (Fase 2):
+execucao_recomendada:
+  temperatura_proposta: 0.4
+  temperatura_copy: 0.7
+  temperatura_mensagens: 0.3
+  registrar: [prompt_id, versao_pack, variaveis_usadas, modelo, timestamp, autor_revisao]
+  rotulo_ia: "Conteúdo gerado por IA — requer revisão e aprovação humana"

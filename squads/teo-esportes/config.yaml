@@ -1,0 +1,214 @@
+# Squad Teo Esportes — Campanhas de Vendas v1.0
+# Squad funcional (não mind-clone): papéis definidos pelo briefing docs/briefing-inicial §4.
+# REQUISITO CRÍTICO: artefatos nascem PRODUTIZÁVEIS para embarque no app (Fase 2).
+
+pack:
+  name: teo-esportes
+  title: "Teo Esportes — Squad de Campanhas de Vendas"
+  version: "1.0.0"
+  author: "Squad Creator Pro"
+  description: >-
+    Squad especializado na criação, publicação e administração de campanhas de
+    vendas da Teo Esportes (camisas, eventos, espaços VIP, recovery, programas
+    corporativos e inscrições). Entrada única via agente de triagem que
+    classifica a situação de venda e roteia para os especialistas.
+  icon: "🏃"
+  slash_prefix: teo
+  entry_agent: teo-triagem
+
+metadata:
+  created: "2026-07-13"
+  briefing_source: docs/briefing-inicial
+  squad_type: functional   # papéis funcionais do briefing — sem mind cloning
+  fase_1: "Squad operando via agentes (este pacote)"
+  fase_2: "Artefatos embarcados no app 'Loja - Teo Esportes' via API"
+
+entry_agent: teo-triagem
+
+# ═══════════════════════════════════════════════════════════════════
+# ARTEFATOS PRODUTIZÁVEIS (contrato com a Fase 2 / app)
+# ═══════════════════════════════════════════════════════════════════
+productization:
+  triagem_heuristicas:
+    path: data/heuristicas-triagem.yaml
+    formato: "YAML determinístico: perguntas → regras first-match-wins → situação"
+    consumo_app: "Wizard de criação de campanha (Etapas 1-2) + endpoint de classificação"
+  catalogo_situacoes:
+    path: data/situacoes-venda.yaml
+    formato: "Catálogo: situação → template LP, prompt pack, copy template, campos obrigatórios"
+    consumo_app: "Resolução de template/prompts e gate de completude do briefing"
+  prompt_packs:
+    path: prompts/
+    contrato: prompts/_contrato.yaml
+    formato: "1 pack por situação; prompts com system + template {{vars}} + guardrails anti-invenção"
+    consumo_app: "Endpoint de geração de conteúdo (proposta, copy, FAQ, mensagens, divulgação)"
+    packs:
+      - prompts/produto-fisico.yaml
+      - prompts/evento-festa.yaml
+      - prompts/espaco-vip.yaml
+      - prompts/servico-recovery.yaml
+      - prompts/programa-corporativo.yaml
+      - prompts/inscricao-gratuita.yaml
+      - prompts/personalizada.yaml
+  copy_templates:
+    path: templates/
+    formato: "Markdown com placeholders {{...}} por situação, seções mapeadas aos blocos das LPs"
+    consumo_app: "Seed da tabela campaign_templates; editor de conteúdo preenche/edita seções"
+  regras_ia:
+    fonte: "prompts/_contrato.yaml → guardrails_globais"
+    resumo: "Conteúdo IA é rascunho rotulado, editável, versionado, com aprovação humana obrigatória (briefing §15)"
+
+domain_model:
+  Triagem:
+    label: "Triagem"
+    scope: "Classificação da situação de venda e roteamento"
+  Definicao:
+    label: "Definição"
+    scope: "Briefing, estratégia, oferta e configuração de venda"
+  Producao:
+    label: "Produção"
+    scope: "Copy, UX/UI e implementação"
+  Qualidade:
+    label: "Qualidade e Operação"
+    scope: "QA/segurança, métricas e acompanhamento"
+
+# ═══════════════════════════════════════════════════════════════════
+# AGENTES (Tiers)
+# ═══════════════════════════════════════════════════════════════════
+agents:
+  # Tier 0 — Entrada e orquestração
+  - id: teo-triagem
+    name: "Teo Triagem"
+    role: "PONTO DE ENTRADA: triagem da situação de venda + orquestração do squad"
+    tier: 0
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: orchestrator
+      work_contexts: ["triagem", "classificação de campanha", "roteamento", "situação de venda"]
+
+  # Tier 1 — Definição
+  - id: teo-pm
+    name: "Teo PM"
+    role: "Briefing estruturado, critérios de aceite, gate de completude (§4.1)"
+    tier: 1
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: executor
+      work_contexts: ["briefing", "requisitos", "critérios de aceite", "validação de completude"]
+  - id: teo-estrategista
+    name: "Teo Estrategista"
+    role: "Posicionamento, proposta de valor, gatilhos com lastro (§4.2)"
+    tier: 1
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: executor
+      work_contexts: ["posicionamento", "proposta de valor", "oferta", "gatilhos", "público-alvo"]
+  - id: teo-ecommerce
+    name: "Teo E-commerce"
+    role: "Modelo de venda, estoque, lotes, checkout, conversão (§4.5)"
+    tier: 1
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: executor
+      work_contexts: ["modelo de venda", "carrinho", "estoque", "lotes", "cupons", "checkout", "conversão"]
+
+  # Tier 2 — Produção
+  - id: teo-copywriter
+    name: "Teo Copywriter"
+    role: "Copy completa por situação via prompt packs (§4.3)"
+    tier: 2
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: executor
+      work_contexts: ["copy", "headline", "FAQ", "mensagens transacionais", "divulgação"]
+  - id: teo-ux
+    name: "Teo UX"
+    role: "Template, seções, identidade, acessibilidade, Design System (§4.4)"
+    tier: 2
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: executor
+      work_contexts: ["template", "seções", "hierarquia visual", "acessibilidade", "design system", "preview"]
+  - id: teo-fullstack
+    name: "Teo Fullstack"
+    role: "Implementação da plataforma, APIs, banco, webhooks, RBAC (§4.6)"
+    tier: 2
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: executor
+      work_contexts: ["implementação", "banco de dados", "APIs", "webhooks", "pagamentos", "autenticação"]
+
+  # Tier 3 — Qualidade e Operação
+  - id: teo-qa
+    name: "Teo QA"
+    role: "Gate de publicação, testes de fluxo, segurança (§4.7)"
+    tier: 3
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: reviewer
+      can_review: ["checklist-publicacao", "seguranca", "fluxos-de-pagamento", "acessibilidade"]
+      work_contexts: ["QA", "segurança", "checklist de publicação", "testes"]
+  - id: teo-dados
+    name: "Teo Dados"
+    role: "Métricas, relatórios, exports, visão consolidada (§4.8)"
+    tier: 3
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: executor
+      work_contexts: ["métricas", "dashboard", "relatórios", "exportações", "acompanhamento"]
+
+# ═══════════════════════════════════════════════════════════════════
+# WORKFLOWS
+# ═══════════════════════════════════════════════════════════════════
+workflows:
+  - id: wf-criar-campanha
+    name: "Criação de Campanha de Vendas"
+    version: "1.1.0"
+    phases: 8
+    description: "Fluxo completo do briefing §5: triagem → briefing → proposta → revisão humana → preview → publicação → acompanhamento → encerramento"
+    human_gates: [fase-4-revisao-humana, fase-6-publicacao]
+
+# Regras invioláveis do squad (derivadas do briefing)
+governance:
+  - "Nenhum conteúdo é publicado sem revisão e aprovação humana (Etapa 4 + gate QA)"
+  - "IA não inventa benefícios, preços, datas ou regras — lacuna vira [PENDENTE] (§15)"
+  - "Conteúdo gerado por IA é rotulado, editável e versionado (§15)"
+  - "Credenciais de pagamento nunca em briefing/formulário de campanha (§7 etapa 9)"
+  - "Preço e total sempre validados no servidor (§13)"
+  - "Toda interface segue o Design System oficial da Teo (§1)"
+  - "Dados pessoais só quando realmente necessários (§7 etapa 8)"
+
+veto_conditions:
+  enforcement: strict
+  registry:
+    - "VT01: classificação com confiança baixa exige confirmação humana"
+    - "VT02: campos obrigatórios pendentes bloqueiam proposta"
+    - "VT03: campanha personalizada sem modelo de venda/blocos definidos"
+    - "Gate Etapa 4: aprovação humana registrada obrigatória"
+    - "Gate Etapa 6: checklist de publicação 100% PASS"
+
+dependencies:
+  core:
+    - aiox-core
+  external_projects:
+    - "pj-landing-vendas (referência técnica — analisar antes de implementar)"
+    - "pj-designsystem/design-system-teo (Design System obrigatório)"
+
+tags:
+  - teo-esportes
+  - campanhas-de-vendas
+  - landing-pages
+  - e-commerce
+  - triagem
+  - produtizavel
+
+# Criado com Squad Creator Pro | 2026-07-13

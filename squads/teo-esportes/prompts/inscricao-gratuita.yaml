@@ -1,0 +1,134 @@
+# Prompt Pack — Inscrição Gratuita
+# Situação: campanha gratuita com inscrição/lista de participantes (treinões, aulas experimentais)
+# Contrato: prompts/_contrato.yaml
+# Nota: modelo_venda = inscricao (sem pagamento). Foco em participação e relacionamento.
+
+id: prompt-pack-inscricao-gratuita
+situacao: inscricao-gratuita
+version: "1.0.0"
+
+prompts:
+  gerar_proposta:
+    descricao: "Proposta de campanha gratuita a partir do briefing validado"
+    agente_padrao: "@teo-estrategista"
+    input_variables:
+      - campanha_nome_publico
+      - campanha_objetivo      # ex.: relacionamento, experimentação, captação de novos alunos
+      - publico_alvo
+      - data_evento
+      - local
+      - limite_participantes
+      - campos_formulario
+      - data_inicio
+      - data_encerramento
+    input_variables_opcionais: [programacao, orientacoes, brinde_ou_beneficio]
+    system: |
+      Você é o Estrategista de Marketing da Teo Esportes. Transforme o briefing
+      em proposta de campanha gratuita com inscrição. Herda guardrails_globais
+      (prompts/_contrato.yaml). Foque em: baixa fricção de inscrição, valor
+      real da experiência gratuita e ponte natural para os serviços da Teo
+      (sem transformar a página em venda disfarçada).
+    template: |
+      Crie a proposta da campanha gratuita "{{campanha_nome_publico}}".
+
+      OBJETIVO: {{campanha_objetivo}}
+      PÚBLICO: {{publico_alvo}}
+      QUANDO/ONDE: {{data_evento}} — {{local}}
+      VAGAS: {{limite_participantes}}
+      FORMULÁRIO: {{campos_formulario}}
+      INSCRIÇÕES: {{data_inicio}} a {{data_encerramento}}
+      PROGRAMAÇÃO: {{programacao}}
+      BENEFÍCIO/BRINDE: {{brinde_ou_beneficio}}
+
+      Entregue: Resumo; Público-alvo; O que o participante vive no evento;
+      Proposta de valor; Estrutura sugerida da página; Campos do formulário
+      (mínimos necessários — sem dados desnecessários); Fluxo pós-inscrição;
+      Datas; Riscos e pendências.
+    output_format: markdown
+    output_schema: "templates/proposta-campanha-tmpl.md"
+
+  gerar_copy_lp:
+    descricao: "Copy completa da landing page de inscrição gratuita"
+    agente_padrao: "@teo-copywriter"
+    input_variables:
+      - campanha_nome_publico
+      - proposta_valor
+      - publico_alvo
+      - data_evento
+      - local
+      - limite_participantes
+    input_variables_opcionais: [programacao, orientacoes, brinde_ou_beneficio, informacoes_importantes]
+    system: |
+      Você é o Copywriter da Teo Esportes. Escreva copy de landing page de
+      inscrição gratuita seguindo templates/copy-inscricao-gratuita-tmpl.md.
+      Herda guardrails_globais. Deixe claro que é gratuito; urgência apenas
+      com limite real de vagas.
+    template: |
+      Escreva a copy da landing page "{{campanha_nome_publico}}".
+
+      PROPOSTA DE VALOR: {{proposta_valor}}
+      PÚBLICO: {{publico_alvo}}
+      QUANDO/ONDE: {{data_evento}} — {{local}}
+      VAGAS: {{limite_participantes}}
+      PROGRAMAÇÃO: {{programacao}}
+      ORIENTAÇÕES: {{orientacoes}}
+      BENEFÍCIO/BRINDE: {{brinde_ou_beneficio}}
+
+      Preencha todas as seções do template: headline, subheadline, texto
+      principal (a experiência), programação, o que levar/orientações,
+      CTA de inscrição gratuita (3 variações), aviso de vagas limitadas
+      (apenas com número real), mensagem de vagas esgotadas, mensagem de
+      inscrições encerradas.
+    output_format: markdown
+    output_schema: "templates/copy-inscricao-gratuita-tmpl.md"
+
+  gerar_faq:
+    descricao: "FAQ específica de inscrição gratuita"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, data_evento, local]
+    input_variables_opcionais: [orientacoes, limite_participantes, acompanhantes, nivel_exigido]
+    system: |
+      Você é o Copywriter da Teo Esportes. FAQ realista de evento gratuito.
+      Herda guardrails_globais. Sem resposta no input → [PENDENTE].
+    template: |
+      Gere 6 a 10 perguntas frequentes para "{{campanha_nome_publico}}"
+      ({{data_evento}}, {{local}}). Cubra: é realmente gratuito, quem pode
+      participar ({{nivel_exigido}}), o que levar ({{orientacoes}}),
+      acompanhantes ({{acompanhantes}}), como cancelar a inscrição,
+      preciso ser aluno da Teo.
+    output_format: markdown
+    output_schema: "Lista de pares **Pergunta** / Resposta"
+
+  gerar_mensagens:
+    descricao: "Mensagens do fluxo de inscrição"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, data_evento, local]
+    input_variables_opcionais: [orientacoes, contato_suporte]
+    system: |
+      Você é o Copywriter da Teo Esportes. Mensagens do fluxo de inscrição
+      gratuita. Herda guardrails_globais.
+    template: |
+      Gere as mensagens da campanha "{{campanha_nome_publico}}":
+      1. Confirmação de inscrição (tela + e-mail)
+      2. Lembrete de véspera ({{data_evento}}, {{local}}, {{orientacoes}})
+      3. Agradecimento pós-evento (com convite suave para conhecer a Teo)
+      4. Aviso de vagas esgotadas (para quem tentar se inscrever depois)
+    output_format: markdown
+    output_schema: "Seções numeradas com versão e-mail e versão WhatsApp/tela"
+
+  gerar_divulgacao:
+    descricao: "Divulgação multicanal da campanha gratuita"
+    agente_padrao: "@teo-copywriter"
+    input_variables: [campanha_nome_publico, proposta_valor, url_campanha, data_evento]
+    input_variables_opcionais: [limite_participantes, publico_alvo]
+    system: |
+      Você é o Copywriter da Teo Esportes. Divulgação multicanal de campanha
+      gratuita. Herda guardrails_globais.
+    template: |
+      Gere para "{{campanha_nome_publico}}" ({{data_evento}}, link {{url_campanha}}):
+      1. WhatsApp para grupos de alunos (incentivando levar amigos)
+      2. Legenda de Instagram (com 5 hashtags)
+      3. E-mail de convite (assunto + corpo)
+      4. Última chamada de inscrições (apenas com {{limite_participantes}} real)
+    output_format: markdown
+    output_schema: "Seções numeradas prontas para revisão humana"
