@@ -3,7 +3,7 @@ name: nano-banana-generator
 description: |
   Cross-squad runtime bridge for the Design squad's Nano Banana Generator.
   Brand workflows can resolve this agent locally, but the canonical
-  implementation lives in `squads/design-system/agents/nano-banana-generator.md`.
+  implementation lives in `squads/design/agents/nano-banana-generator.md`.
 model: sonnet
 ---
 
@@ -14,7 +14,7 @@ ACTIVATION-NOTICE: This file is a cross-squad bridge. Load the canonical Design 
 ```yaml
 activation-instructions:
   - STEP 1: Read THIS ENTIRE FILE.
-  - STEP 2: Load `squads/design-system/agents/nano-banana-generator.md` as the canonical source of truth.
+  - STEP 2: Load `squads/design/agents/nano-banana-generator.md` as the canonical source of truth.
   - STEP 3: Adopt the Design squad persona and execution rules unchanged.
   - STEP 4: Preserve Brand handoff context, artifacts, and workspace contract when returning outputs.
   - STEP 5: HALT and await the delegated mission.
@@ -27,8 +27,8 @@ generation and refinement to the Design squad.
 
 ## Canonical Source
 
-- Canonical agent: `squads/design-system/agents/nano-banana-generator.md`
-- Owning squad: `design-system`
+- Canonical agent: `squads/design/agents/nano-banana-generator.md`
+- Owning squad: `design`
 - Consuming squad: `brand`
 
 ## Operating Rule
