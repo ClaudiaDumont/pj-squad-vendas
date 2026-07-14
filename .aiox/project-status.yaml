@@ -3,12 +3,12 @@ status:
   modifiedFiles: []
   modifiedFilesTotalCount: 0
   recentCommits:
-    - 'ci: add PR validation workflow'
-    - 'chore: initial commit from greenfield state'
+    - 'fix(ci): guard npm install when repository has no package.json'
+    - 'feat: add squad teo-esportes with wf-criar-campanha workflow'
   currentEpic: null
   currentStory: null
-  lastUpdate: '2026-07-13T21:41:49.425Z'
+  lastUpdate: '2026-07-14T12:41:20.388Z'
   isGitRepo: true
-timestamp: 1783978909427
+timestamp: 1784032880390
 ttl: 60
-gitFingerprint: 1783965531636.8613:1783965584031.5925
+gitFingerprint: 1783983465726.3694:1783983662485.3767

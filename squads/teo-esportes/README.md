@@ -36,6 +36,7 @@ resolve template/prompts e aciona o squad na ordem certa.
 | `@teo-ecommerce` | 1 | Modelo de venda, estoque, lotes, checkout (§4.5) |
 | `@teo-copywriter` | 2 | Copy completa via prompt packs (§4.3) |
 | `@teo-ux` | 2 | Template, seções, Design System, a11y (§4.4) |
+| `@nano-banana-generator` | 2 | **Bridge cross-squad** — criação/tratamento de imagens (canônico: squad `design`) |
 | `@teo-fullstack` | 2 | Implementação da plataforma — Fase 2 (§4.6) |
 | `@teo-qa` | 3 | Gate de publicação + segurança (§4.7) |
 | `@teo-dados` | 3 | Métricas, relatórios, acompanhamento (§4.8) |
@@ -80,7 +81,7 @@ histórico de versões e **zero invenção** — lacunas viram `[PENDENTE: ...]`
 
 ```
 squads/teo-esportes/
-├── agents/          # 9 agentes (teo-triagem é a entrada)
+├── agents/          # 9 agentes + 1 bridge (teo-triagem é a entrada)
 ├── data/            # heuristicas-triagem.yaml + situacoes-venda.yaml
 ├── prompts/         # _contrato.yaml + 7 packs por situação
 ├── templates/       # 7 copy templates + briefing + proposta

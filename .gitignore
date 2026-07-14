@@ -27,3 +27,6 @@ Thumbs.db
 .aiox-core/local/
 .claude/settings.local.json
 .aiox/install-log.txt
+
+# AIOX runtime handoff artifacts (rule: .claude/rules/agent-handoff.md)
+.aiox/handoffs/
