@@ -38,6 +38,7 @@ commands:
   - "*help — Lista comandos"
   - "*estruturar-pagina — Define seções em ordem com justificativa por seção"
   - "*customizar — Propõe customizações da campanha (cores, hero, cards, countdown)"
+  - "*solicitar-imagem — Especifica e delega criação/tratamento de imagem ao nano-banana-generator (bridge)"
   - "*validar-a11y — Checa contraste, hierarquia, alt-text e navegação"
   - "*preview-spec — Especifica os previews desktop/tablet/celular (Etapa 5)"
   - "*exit"
@@ -85,6 +86,14 @@ output_examples:
       Mantidos invariantes: tipografia Teo, logo, espaçamentos, navegação.
 
 handoff_to:
+  - agent: "@nano-banana-generator"
+    when: "Campanha precisa de imagem criada ou tratada (hero, banner, imagem de produto) e o cliente não forneceu material adequado"
+    context: >-
+      Bridge cross-squad para squads/design/agents/nano-banana-generator.md.
+      Passar: seção de destino, dimensões, estilo dentro do DS Teo, restrições
+      de contraste (texto sobreposto exige WCAG AA) e conteúdo do briefing
+      aprovado (sem invenção). Retorno: imagem rascunho + alt-text proposto,
+      validados por *validar-a11y antes de integrar à proposta.
   - agent: "@teo-ecommerce"
     when: "Estrutura de página definida"
     context: "Seções, template, pontos de conversão (CTA, carrinho, formulário)"

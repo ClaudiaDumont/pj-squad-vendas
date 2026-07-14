@@ -5,11 +5,13 @@
 # v1.1.0 — Normalizado para o schema canônico AIOX (workflow.sequence como contrato
 # de execução). Conteúdo semântico (checkpoints, veto conditions, gates) preservado
 # integralmente da v1.0.0.
+# v1.2.0 — Sub-passo opcional de imagens na fase 3 via bridge cross-squad
+# nano-banana-generator (canônico: squads/design/agents/nano-banana-generator.md).
 
 workflow:
   id: wf-criar-campanha
   name: "Criação de Campanha de Vendas — Teo Esportes"
-  version: "1.1.0"
+  version: "1.2.0"
   type: squad-campaign
   squad: teo-esportes
   entry_agent: teo-triagem
@@ -80,6 +82,7 @@ workflow:
         - "teo-estrategista: gerar_proposta + gatilhos_aprovados"
         - "teo-copywriter: gerar_copy_lp + gerar_faq + gerar_mensagens (prompt pack da situação)"
         - "teo-ux: estrutura de seções + customizações dentro do Design System"
+        - "nano-banana-generator (OPCIONAL, bridge design): criar/tratar imagens especificadas pelo teo-ux quando o briefing não fornecer material adequado — retorno com alt-text, validado por *validar-a11y"
         - "teo-ecommerce: configuração do modelo de venda"
       creates: proposta-campanha
       outputs: ["templates/proposta-campanha-tmpl.md completo"]
@@ -89,6 +92,8 @@ workflow:
           - "Copy sem proposta_valor/gatilhos_aprovados do estrategista"
           - "Gatilho sem lastro"
           - "Configuração de venda incompatível com a situação (ex.: carrinho em lead)"
+          - "Imagem gerada por IA sem alt-text ou sem validação a11y do teo-ux"
+          - "Imagem gerada representando benefício, preço, data ou produto fora do briefing"
       next: revisao_humana
 
     - step: revisao_humana

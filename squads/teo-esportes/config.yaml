@@ -135,6 +135,18 @@ agents:
       human_in_the_loop: true
       story_role: executor
       work_contexts: ["template", "seções", "hierarquia visual", "acessibilidade", "design system", "preview"]
+  - id: nano-banana-generator
+    name: "Nano Banana Generator (bridge)"
+    role: "BRIDGE CROSS-SQUAD: criação/tratamento de imagens para LPs de campanha — canônico em squads/design/agents/nano-banana-generator.md"
+    tier: 2
+    bridge:
+      canonical: squads/design/agents/nano-banana-generator.md
+      owning_squad: design
+    executor_profile:
+      sinkra_type: Agent
+      human_in_the_loop: true
+      story_role: executor
+      work_contexts: ["geração de imagem", "tratamento de foto", "hero", "banner", "upscale", "variações visuais"]
   - id: teo-fullstack
     name: "Teo Fullstack"
     role: "Implementação da plataforma, APIs, banco, webhooks, RBAC (§4.6)"
@@ -172,7 +184,7 @@ agents:
 workflows:
   - id: wf-criar-campanha
     name: "Criação de Campanha de Vendas"
-    version: "1.1.0"
+    version: "1.2.0"
     phases: 8
     description: "Fluxo completo do briefing §5: triagem → briefing → proposta → revisão humana → preview → publicação → acompanhamento → encerramento"
     human_gates: [fase-4-revisao-humana, fase-6-publicacao]
