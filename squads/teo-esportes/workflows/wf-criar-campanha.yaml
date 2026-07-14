@@ -75,7 +75,7 @@ workflow:
     - step: geracao_proposta
       id: proposta
       phase: 3
-      agent: teo-estrategista/teo-copywriter/teo-ux/teo-ecommerce
+      agent: teo-estrategista/teo-copywriter/teo-ux/nano-banana-generator/teo-ecommerce
       action: "Gerar proposta completa da campanha (estratégia, copy, UX, modelo de venda)"
       requires: briefing-campanha
       ordem:
@@ -188,7 +188,8 @@ workflow:
     briefing_to_proposta: >-
       Briefing COMPLETO (bloco 13 assinado, checklist-briefing-completo PASS).
       Squad de proposta: executar na ordem estrategista → copywriter → ux →
-      ecommerce. Lacunas viram [PENDENTE], nunca invenção.
+      (opcional) nano-banana-generator → ecommerce. Lacunas viram [PENDENTE],
+      nunca invenção.
     proposta_to_revisao: >-
       Proposta completa em templates/proposta-campanha-tmpl.md com pendências
       consolidadas na seção 11. Encaminhar ao revisor humano para edição e

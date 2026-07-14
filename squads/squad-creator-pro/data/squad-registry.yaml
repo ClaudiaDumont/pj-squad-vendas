@@ -628,6 +628,8 @@ squads:
         consumido via bridges por brand e teo-esportes)
       - 89 tasks e 11 workflows cobrindo auditoria brownfield, tokens, componentes e Storybook
     example_use: Auditar padrões de UI existentes e consolidá-los em um design system com tokens
+    executor_capable_agents: []
+    aggregated_work_contexts: []
   etl-ops:
     path: squads/etl-ops/
     version: 1.0.0
@@ -1156,6 +1158,7 @@ squads:
         work_contexts: []
         core_replaces: null
         can_review: []
+    aggregated_work_contexts: []
   squad-creator-pro:
     path: squads/squad-creator-pro/
     version: 4.0.0
@@ -1237,6 +1240,7 @@ squads:
         work_contexts: []
         core_replaces: null
         can_review: []
+    aggregated_work_contexts: []
   storytelling:
     path: squads/storytelling/
     version: 1.0.0
@@ -1567,6 +1571,176 @@ squads:
           - seguranca
           - fluxos-de-pagamento
           - acessibilidade
+    executor_capable_agents:
+      - id: teo-triagem
+        story_role: orchestrator
+        fw_type: Agent
+        work_contexts:
+          - triagem
+          - classificação de campanha
+          - roteamento
+          - situação de venda
+        core_replaces: null
+        can_review: []
+      - id: teo-pm
+        story_role: executor
+        fw_type: Agent
+        work_contexts:
+          - briefing
+          - requisitos
+          - critérios de aceite
+          - validação de completude
+        core_replaces: null
+        can_review: []
+      - id: teo-estrategista
+        story_role: executor
+        fw_type: Agent
+        work_contexts:
+          - posicionamento
+          - proposta de valor
+          - oferta
+          - gatilhos
+          - público-alvo
+        core_replaces: null
+        can_review: []
+      - id: teo-ecommerce
+        story_role: executor
+        fw_type: Agent
+        work_contexts:
+          - modelo de venda
+          - carrinho
+          - estoque
+          - lotes
+          - cupons
+          - checkout
+          - conversão
+        core_replaces: null
+        can_review: []
+      - id: teo-copywriter
+        story_role: executor
+        fw_type: Agent
+        work_contexts:
+          - copy
+          - headline
+          - FAQ
+          - mensagens transacionais
+          - divulgação
+        core_replaces: null
+        can_review: []
+      - id: teo-ux
+        story_role: executor
+        fw_type: Agent
+        work_contexts:
+          - template
+          - seções
+          - hierarquia visual
+          - acessibilidade
+          - design system
+          - preview
+        core_replaces: null
+        can_review: []
+      - id: nano-banana-generator
+        story_role: executor
+        fw_type: Agent
+        work_contexts:
+          - geração de imagem
+          - tratamento de foto
+          - hero
+          - banner
+          - upscale
+          - variações visuais
+        core_replaces: null
+        can_review: []
+      - id: teo-fullstack
+        story_role: executor
+        fw_type: Agent
+        work_contexts:
+          - implementação
+          - banco de dados
+          - APIs
+          - webhooks
+          - pagamentos
+          - autenticação
+        core_replaces: null
+        can_review: []
+      - id: teo-qa
+        story_role: reviewer
+        fw_type: Agent
+        work_contexts:
+          - QA
+          - segurança
+          - checklist de publicação
+          - testes
+        core_replaces: null
+        can_review:
+          - checklist-publicacao
+          - seguranca
+          - fluxos-de-pagamento
+          - acessibilidade
+      - id: teo-dados
+        story_role: executor
+        fw_type: Agent
+        work_contexts:
+          - métricas
+          - dashboard
+          - relatórios
+          - exportações
+          - acompanhamento
+        core_replaces: null
+        can_review: []
+    aggregated_work_contexts:
+      - triagem
+      - classificação de campanha
+      - roteamento
+      - situação de venda
+      - briefing
+      - requisitos
+      - critérios de aceite
+      - validação de completude
+      - posicionamento
+      - proposta de valor
+      - oferta
+      - gatilhos
+      - público-alvo
+      - modelo de venda
+      - carrinho
+      - estoque
+      - lotes
+      - cupons
+      - checkout
+      - conversão
+      - copy
+      - headline
+      - FAQ
+      - mensagens transacionais
+      - divulgação
+      - template
+      - seções
+      - hierarquia visual
+      - acessibilidade
+      - design system
+      - preview
+      - geração de imagem
+      - tratamento de foto
+      - hero
+      - banner
+      - upscale
+      - variações visuais
+      - implementação
+      - banco de dados
+      - APIs
+      - webhooks
+      - pagamentos
+      - autenticação
+      - QA
+      - segurança
+      - checklist de publicação
+      - testes
+      - métricas
+      - dashboard
+      - relatórios
+      - exportações
+      - acompanhamento
 domain_index:
   business_ops:
     - aiox-sop
