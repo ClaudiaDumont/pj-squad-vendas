@@ -80,7 +80,8 @@ workflow:
       requires: briefing-campanha
       ordem:
         - "teo-estrategista: gerar_proposta + gatilhos_aprovados"
-        - "teo-copywriter: gerar_copy_lp + gerar_faq + gerar_mensagens (prompt pack da situação)"
+        - "teo-copywriter: gerar_copy_lp + gerar_faq + gerar_mensagens (prompt pack da situação) + *auditar-triggers (Sugarman 30 Triggers, elite_frameworks) antes do handoff"
+        - "copy-chief (OPCIONAL, bridge copy): diagnóstico/refino de ângulo em campanha de alto impacto, respeitando o Teo Esportes Delegation Contract do bridge"
         - "teo-ux: estrutura de seções + customizações dentro do Design System"
         - "nano-banana-generator (OPCIONAL, bridge design): criar/tratar imagens especificadas pelo teo-ux quando o briefing não fornecer material adequado — retorno com alt-text, validado por *validar-a11y"
         - "teo-ecommerce: configuração do modelo de venda"
