@@ -22,7 +22,17 @@ const path = require('path');
 const yaml = require('js-yaml');
 
 const runtimePaths = require('./runtime-paths.cjs');
-const { resolveSquadWorkspaceReadiness } = require('../../../workspace/scripts/resolve-squad-workspace-readiness.cjs');
+
+// Módulo de readiness vive em workspace/scripts/ na raiz da instalação.
+// Instalações sem workspace/ não podem crashar o gate: os gates 1-2 (sessão,
+// business/product) e 3-4 (campaign slug, brief file) não dependem dele.
+let resolveSquadWorkspaceReadiness = null;
+let workspaceModuleError = null;
+try {
+  ({ resolveSquadWorkspaceReadiness } = require('../../../workspace/scripts/resolve-squad-workspace-readiness.cjs'));
+} catch (error) {
+  workspaceModuleError = error.message;
+}
 
 const CREATION_COMMANDS = [
   '*sales-page', '*email-sequence', '*ads', '*headlines', '*lead-magnet',
@@ -161,15 +171,18 @@ function checkGate(args) {
     };
   }
 
-  const readiness = resolveSquadWorkspaceReadiness({
-    squad: 'copy',
-    business: session.businessSlug,
-    product: session.productSlug,
-    contextType: 'product',
-  });
+  let readiness = null;
+  if (resolveSquadWorkspaceReadiness) {
+    readiness = resolveSquadWorkspaceReadiness({
+      squad: 'copy',
+      business: session.businessSlug,
+      product: session.productSlug,
+      contextType: 'product',
+    });
+  }
   const checklist = buildProgressChecklist(session, readiness);
 
-  if (['blocked', 'not_applicable'].includes(readiness.status)) {
+  if (readiness && ['blocked', 'not_applicable'].includes(readiness.status)) {
     return {
       verdict: 'BLOCKED',
       reason: readiness.reason || 'Product context is not ready for copy creation.',
@@ -241,6 +254,9 @@ function checkGate(args) {
     campaign_brief: runtimePaths.toWorkspaceRelative(campaignBriefPath),
     checklist,
     command: args.command || '(any creation command)',
+    warnings: workspaceModuleError
+      ? [`Workspace readiness check UNAVAILABLE (${workspaceModuleError}). Gates 1-4 passaram, mas as fontes canônicas do workspace NÃO foram verificadas — validar manualmente antes de promover para FINAL.`]
+      : [],
   };
 }
 
@@ -277,6 +293,12 @@ function main() {
   console.log(`- Product: \`${result.product}\``);
   console.log(`- Campaign: \`${result.campaign}\``);
   console.log(`- Brief: \`${result.campaign_brief}\``);
+  if (result.warnings && result.warnings.length > 0) {
+    console.log('');
+    for (const warning of result.warnings) {
+      console.log(`⚠️ ${warning}`);
+    }
+  }
   console.log(`\nCopy creation is authorized. Proceed with \`${result.command}\`.`);
   process.exit(0);
 }

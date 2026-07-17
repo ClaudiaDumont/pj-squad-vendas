@@ -39,7 +39,7 @@ const SessionContextLoader = require('../../../.aiox-core/scripts/session-contex
 const { loadProjectStatus } = require('../../../.aiox-core/infrastructure/scripts/project-status-loader');
 
 const SQUADS_PATH = './squads';
-const REGISTRY_PATH = './squads/sinkra-squad/data/ecosystem-registry.yaml';
+const REGISTRY_PATH = './squads/squad-creator-pro/data/squad-registry.yaml';
 const TIMEOUT_MS = 2000;
 
 /**
