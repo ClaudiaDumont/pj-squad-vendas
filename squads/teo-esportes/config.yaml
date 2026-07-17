@@ -26,6 +26,16 @@ metadata:
 entry_agent: teo-triagem
 
 # ═══════════════════════════════════════════════════════════════════
+# DEPENDÊNCIAS EXTERNAS (checkouts irmãos — contrato explícito)
+# ═══════════════════════════════════════════════════════════════════
+external_dependencies:
+  # Design System oficial da Teo. Workflows e veto conditions que citam
+  # `{design_system_root}` resolvem por esta chave — nunca por path
+  # relativo implícito. Ex.: gate de preview roda
+  # `node {design_system_root}/tools/validate-page.mjs {preview.html}`.
+  design_system_root: ../pj-designsystem/design-system-teo
+
+# ═══════════════════════════════════════════════════════════════════
 # ARTEFATOS PRODUTIZÁVEIS (contrato com a Fase 2 / app)
 # ═══════════════════════════════════════════════════════════════════
 productization:
