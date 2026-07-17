@@ -37,6 +37,7 @@ resolve template/prompts e aciona o squad na ordem certa.
 | `@teo-copywriter` | 2 | Copy completa via prompt packs (§4.3) |
 | `@teo-ux` | 2 | Template, seções, Design System, a11y (§4.4) |
 | `@nano-banana-generator` | 2 | **Bridge cross-squad** — criação/tratamento de imagens (canônico: squad `design`) |
+| `@copy-chief` | 2 | **Bridge cross-squad** — estratégia/refino de copy com elite minds (canônico: squad `copy`) |
 | `@teo-fullstack` | 2 | Implementação da plataforma — Fase 2 (§4.6) |
 | `@teo-qa` | 3 | Gate de publicação + segurança (§4.7) |
 | `@teo-dados` | 3 | Métricas, relatórios, acompanhamento (§4.8) |
