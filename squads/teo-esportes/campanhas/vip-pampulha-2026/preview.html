@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIP Pampulha 2026 — Prévia da Copy</title>
+<link rel="stylesheet" href="../../../../../pj-designsystem/design-system-teo/tokens/tokens.css">
+<link rel="stylesheet" href="../../../../../pj-designsystem/design-system-teo/tokens/base.css">
+<link rel="stylesheet" href="../../../../../pj-designsystem/design-system-teo/atoms/typography.css">
+<link rel="stylesheet" href="../../../../../pj-designsystem/design-system-teo/organisms/sections.css">
+<style>
+  /* Tokens e primitivos de texto (.display, .eyebrow, .lead, .micro) vêm
+     exclusivamente do Design System oficial via <link> acima — zero hardcode
+     de cor/tipografia nesta folha. Apenas overrides de layout específicos
+     desta campanha ficam aqui. */
+  [data-theme="light"] .nav,
+  [data-theme="light"] header.nav { border-bottom-color: var(--border-hairline); }
+  [data-theme="light"] .model-card { background: var(--surface-card-1); }
+  [data-theme="light"] .m-cta { background: var(--surface-footer); }
+  * { box-sizing: border-box; }
+  body {
+    line-height: var(--leading-normal);
+    transition: background .2s ease, color .2s ease;
+  }
+  .theme-toggle {
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    color: var(--neutral-50);
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    font-weight: var(--fw-bold);
+    cursor: pointer;
+    margin-right: 12px;
+  }
+  .nav-right { display: flex; align-items: center; }
+  .banner {
+    background: var(--orange-600);
+    color: var(--text-on-brand-active);
+    text-align: center;
+    font-size: var(--text-xs);
+    padding: 8px 16px;
+    letter-spacing: var(--tracking-wide);
+  }
+  header.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border-hairline);
+  }
+  /* .logo usa os SVGs reais de assets/logo/ do DS (GUIA-DE-USO.md:175-199 +
+     organisms/header-footer.css:19-31): <a aria-label> com dois <img>, alterna
+     automaticamente por tema via .logo-on-dark/.logo-on-light (CSS oficial). */
+  .nav .logo { height: 26px; display: flex; align-items: center; }
+  .nav-cta {
+    background: var(--orange-500);
+    color: var(--text-on-brand);
+    padding: 10px 20px;
+    border-radius: var(--radius-pill);
+    font-weight: var(--fw-bold);
+    font-size: var(--text-sm);
+  }
+  /* HERO — .hero--media, organism oficial formalizado em
+     organisms/sections.css:42-85 + GUIA-DE-USO.md:206-264 (hero full-bleed
+     com card glass sobreposto, aprovado após o gap reportado nesta campanha).
+     Zero CSS de estrutura aqui: .hero--media, .hero-media-bg, .hero-media-card
+     e o par --text-on-media/-muted vêm 100% do DS via <link>. Só o
+     background-image (asset desta campanha) e .hero-tags (elemento específico
+     da campanha, não faz parte do organism) ficam locais. */
+  .hero-media-bg { background-image: url('assets/comunidade-teo-pos-prova.jpeg'); background-position: center 30%; }
+  h1.display {
+    /* herda family/weight/style/line-height/letter-spacing/text-transform/
+       color de .display em tokens/base.css + .hero-media-card h1 (color:
+       var(--text-on-media)) em organisms/sections.css:81 */
+    font-size: var(--text-4xl); /* tokens.css:114 — mesmo tamanho do exemplo oficial em GUIA-DE-USO.md:227 */
+    text-transform: none; /* copy de hero usa frase em caixa mista, não uppercase — desvio documentado abaixo */
+  }
+  .hero-tags { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 24px; }
+  .tag {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.24);
+    color: var(--text-on-media); /* card já está sobre --overlay-media/--surface-glass, mesmo par fixo do card */
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: var(--text-xs);
+    font-weight: var(--fw-bold);
+  }
+  .btn-primary {
+    display: inline-block;
+    background: var(--orange-500);
+    color: var(--text-on-brand);
+    font-weight: var(--fw-bold);
+    padding: 16px 32px;
+    border-radius: var(--radius-pill);
+    font-size: var(--text-md);
+    text-decoration: none;
+  }
+  section { padding: 56px 32px; max-width: 900px; margin: 0 auto; }
+  /* .hero--media é full-bleed por definição (organisms/sections.css:48-53) —
+     anula o padding/max-width genérico de `section` acima só para o hero,
+     sem tocar no restante do organism. */
+  .hero.hero--media { padding: 0; max-width: none; margin: 0; }
+  /* .sec-head reaproveita o mesmo token de .sec-head h2 do organism oficial
+     (organisms/sections.css:59-66) — apenas text-transform difere (ver nota abaixo) */
+  .sec-head {
+    font-family: var(--font-display);
+    font-weight: var(--fw-black);
+    font-style: italic;
+    font-size: var(--text-3xl);
+    text-transform: none; /* mesmo desvio documentado do h1.display: frase em caixa mista, não uppercase */
+    margin-bottom: 20px;
+  }
+  .manifesto p { color: var(--neutral-300); font-size: var(--text-md); margin-bottom: 16px; }
+  .pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .pillar {
+    background: var(--surface-card-1);
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+  }
+  .pillar h3 { margin: 0 0 8px; font-size: var(--text-md); }
+  .pillar p { margin: 0; color: var(--neutral-400); font-size: var(--text-sm); }
+  .support-image {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    margin: 24px 0;
+    border: 1px solid var(--border-hairline);
+  }
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .model-card {
+    background: linear-gradient(160deg, var(--surface-card-1) 0%, var(--surface-card-2) 100%);
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+  }
+  .model-card.founder { background: var(--lime-tint); border-color: var(--lime-tint-border); }
+  .model-card h3 { margin: 0 0 4px; font-size: var(--text-md); }
+  .model-card .who { color: var(--neutral-400); font-size: var(--text-sm); margin-bottom: 16px; }
+  .price-tag { font-size: var(--text-lg); font-weight: var(--fw-black); color: var(--neutral-50); }
+  .price-tag.free { color: var(--energy-lime); }
+  .model-card .incl { font-size: var(--text-xs); color: var(--neutral-500); margin-top: 8px; }
+  .benefits { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .benefits li { padding-left: 28px; position: relative; color: var(--neutral-300); }
+  .benefits li::before { content: "✓"; position: absolute; left: 0; color: var(--orange-500); font-weight: var(--fw-black); }
+  .benefits strong { color: var(--neutral-50); }
+  .addr-block {
+    background: var(--surface-card-1);
+    border: 1px solid var(--border-hairline);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+  }
+  .addr-block p { margin: 6px 0; color: var(--neutral-300); }
+  .urgency {
+    background: var(--gradient-brand-bar);
+    color: var(--text-on-brand);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    text-align: center;
+    font-weight: var(--fw-bold);
+  }
+  .urgency .big { font-size: var(--text-lg); display: block; margin-bottom: 4px; }
+  .terms-list { color: var(--neutral-300); padding-left: 20px; }
+  .terms-list li { margin-bottom: 10px; }
+  .faq-item { border-bottom: 1px solid var(--border-hairline); padding: 18px 0; }
+  .faq-item .q { font-weight: var(--fw-bold); margin-bottom: 6px; }
+  .faq-item .a { color: var(--neutral-400); font-size: var(--text-sm); }
+  .cta-final { text-align: center; padding: 64px 32px; background: var(--surface-card-1); }
+  .cta-final-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: var(--fw-black);
+    font-size: var(--text-2xl);
+    text-transform: none; /* mesmo desvio documentado do h1.display: frase em caixa mista */
+    margin-bottom: 24px;
+  }
+  footer {
+    background: var(--surface-footer);
+    padding: 32px;
+    text-align: center;
+    color: var(--neutral-500);
+    font-size: var(--text-xs);
+  }
+  .m-cta {
+    position: sticky;
+    bottom: 0;
+    background: var(--neutral-900);
+    border-top: 1px solid var(--border-soft);
+    padding: 14px 20px;
+    display: none;
+  }
+  .m-cta a { display: block; text-align: center; background: var(--orange-500); color: var(--text-on-brand); font-weight: var(--fw-bold); padding: 14px; border-radius: var(--radius-pill); text-decoration: none; }
+  @media (max-width: 640px) {
+    .m-cta { display: block; }
+    section { padding: 40px 20px; }
+  }
+  .badge-preview {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    background: var(--energy-lime);
+    color: var(--neutral-900);
+    font-weight: var(--fw-black);
+    font-size: var(--text-xs);
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<div class="badge-preview">PRÉVIA — RASCUNHO</div>
+<div class="banner">🏃 Conteúdo gerado por IA — rascunho de copy para revisão, ainda não é a página real da campanha</div>
+
+<header class="nav">
+  <a class="logo" href="#" aria-label="TEO Esportes">
+    <img class="logo-on-dark" src="../../../../../pj-designsystem/design-system-teo/assets/logo/logo-laranjacinza-fundoescuro.svg" alt="TEO Esportes">
+    <img class="logo-on-light" src="../../../../../pj-designsystem/design-system-teo/assets/logo/logo-laranja-fundobranco.svg" alt="TEO Esportes">
+  </a>
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Fundo claro</button>
+    <a href="#" class="nav-cta">Garantir minha vaga</a>
+  </div>
+</header>
+
+<section class="hero hero--media">
+  <div class="hero-media-bg" role="img" aria-label="Comunidade de corredores da Teo Esportes reunida após a prova"></div>
+  <div class="hero-media-card">
+    <span class="eyebrow">Volta da Pampulha 2026 — 06/12</span>
+    <h1 class="display">A Volta da Pampulha fecha o seu ano de corrida. A Teo cuida de todo o resto.</h1>
+    <p class="lead">No dia 06/12, o Espaço VIP da Teo Esportes te espera no Clube CEU da UFMG: vestiários, estacionamento, guarda-volumes, comida, bebida, hidratação e recovery pós-prova. São apenas 400 vagas.</p>
+    <div class="hero-tags">
+      <span class="tag">🏟️ Clube CEU da UFMG</span>
+      <span class="tag">🎟️ Apenas 400 vagas</span>
+    </div>
+    <a href="#" class="btn-primary">Garantir minha vaga no VIP</a>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec-head">Seu dia de prova com a Teo</h2>
+  <div class="manifesto">
+    <p>Todo corredor de BH sabe: a Volta da Pampulha não é só mais uma prova. É o encerramento do ano — a linha de chegada de doze meses de treino, planilha e madrugada. Um dia desses merece mais do que procurar lugar pra deixar a mochila e trocar de roupa atrás de um poste.</p>
+    <p>No VIP Pampulha 2026, você chega, estaciona no Clube CEU da UFMG, troca de roupa em vestiário de verdade e deixa suas coisas no guarda-volumes. Aí só resta uma tarefa: correr.</p>
+    <p>Na volta, é onde a prova vira festa. Recovery pós-prova para o corpo, hidratação, comida e bebida gelada para brindar o ano com quem correu ao seu lado — e com quem te esperou na torcida. Acompanhantes têm lugar garantido pelo mesmo valor, porque dia de fechamento de ano é dia de estar junto.</p>
+    <p>É a estrutura da Teo Esportes cuidando do antes, do durante e do depois. Você cuida só dos 18 km.</p>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec-head">Estrutura oferecida</h2>
+  <div class="pillars">
+    <div class="pillar"><h3>👕 Vestiários</h3><p>Troque de roupa e saia pronto para a prova (e volte para um banho de gente).</p></div>
+    <div class="pillar"><h3>🚗 Estacionamento</h3><p>Dentro do Clube CEU da UFMG, sujeito à capacidade do clube.</p></div>
+    <div class="pillar"><h3>🎒 Guarda-volumes</h3><p>Suas coisas seguras enquanto você corre.</p></div>
+    <div class="pillar"><h3>🍽️ Alimentação à vontade</h3><p>Comida liberada para repor a energia no pós-prova.</p></div>
+    <div class="pillar"><h3>🍻 Bebidas à vontade</h3><p>O brinde de fim de ano, sem racionamento (consumo apenas para maiores de 18 anos).</p></div>
+    <div class="pillar"><h3>💧 Hidratação</h3><p>Água e reposição antes e depois da prova.</p></div>
+    <div class="pillar"><h3>🧊 Recovery pós-prova</h3><p>Estrutura de recuperação para fechar o dia bem.</p></div>
+  </div>
+  <img class="support-image" src="assets/celebracao-equipe-teo.png" alt="Equipe Teo Esportes celebrando com medalhas e bolo comemorativo">
+</section>
+
+<section>
+  <h2 class="sec-head">Tipos de acesso</h2>
+  <div class="model-grid">
+    <div class="model-card">
+      <h3>Corredor</h3>
+      <div class="who">Aluno da Teo ou corredor em geral</div>
+      <div class="price-tag">R$ 120,00</div>
+      <div class="incl">Toda a estrutura inclusa</div>
+    </div>
+    <div class="model-card">
+      <h3>Acompanhante</h3>
+      <div class="who">Família e amigos na torcida</div>
+      <div class="price-tag">R$ 120,00</div>
+      <div class="incl">Toda a estrutura inclusa</div>
+    </div>
+    <div class="model-card founder">
+      <h3>Membro Fundador 🌟</h3>
+      <div class="who">Fundadores da Teo Esportes</div>
+      <div class="price-tag free">Cortesia</div>
+      <div class="incl">Via código exclusivo · acompanhantes pagam R$ 120,00 cada</div>
+    </div>
+  </div>
+  <p style="color:var(--neutral-400); margin-top:16px; font-size:var(--text-sm);">Não precisa ser aluno da Teo — e não precisa nem correr: acompanhantes são bem-vindos.</p>
+</section>
+
+<section>
+  <h2 class="sec-head">Benefícios</h2>
+  <ul class="benefits">
+    <li><strong>Logística resolvida:</strong> estacionamento, vestiário e guarda-volumes no mesmo lugar</li>
+    <li><strong>Recuperação no lugar certo:</strong> recovery, hidratação e comida assim que você cruza a linha</li>
+    <li><strong>Fim de ano com a sua comunidade:</strong> o pós-prova vira a confraternização dos corredores de BH</li>
+    <li><strong>Família junto:</strong> quem te apoia o ano inteiro espera você com conforto, não em pé na calçada</li>
+    <li><strong>Fundadores em casa:</strong> quem construiu a Teo entra como convidado</li>
+  </ul>
+</section>
+
+<section>
+  <h2 class="sec-head">Localização e horários</h2>
+  <div class="addr-block">
+    <p><strong>Clube CEU da UFMG</strong></p>
+    <p>Av. Alfredo Camarate, 617 — São Luiz, Belo Horizonte/MG, 31310-000</p>
+    <p><strong>Funcionamento:</strong> dia 06/12/2026, das 05:00 às 11:30</p>
+  </div>
+</section>
+
+<section>
+  <div class="urgency">
+    <span class="big">Apenas 400 vagas, por ordem de compra</span>
+    Vendas abertas de 15/11 até 04/12 às 23:59 (horário de Brasília) — ou até a última pulseira.
+  </div>
+</section>
+
+<section>
+  <h2 class="sec-head">Termos específicos</h2>
+  <ul class="terms-list">
+    <li>Acesso ao espaço exclusivamente com <strong>pulseira</strong>, com retirada antecipada <strong>obrigatória</strong> de <strong>26/11 a 05/12/2026</strong> no Espaço Teo Esportes. Não há retirada no dia da prova.</li>
+    <li><strong>Cancelamento:</strong> reembolso integral até 29/11/2026 (7 dias antes da prova); após essa data, não há reembolso.</li>
+    <li>Alimentação e bebidas à vontade dentro do horário de funcionamento; bebidas alcoólicas somente para maiores de 18 anos.</li>
+    <li>Estacionamento sujeito à capacidade do Clube CEU da UFMG (não é vaga garantida).</li>
+    <li><strong>Crianças até 5 anos não pagam.</strong></li>
+  </ul>
+</section>
+
+<section>
+  <h2 class="sec-head">Perguntas frequentes</h2>
+  <div class="faq-item">
+    <div class="q">Preciso ser aluno da Teo Esportes para comprar?</div>
+    <div class="a">Não. O VIP Pampulha 2026 é aberto a alunos, corredores em geral e acompanhantes. Todo mundo paga o mesmo valor: R$ 120,00.</div>
+  </div>
+  <div class="faq-item">
+    <div class="q">Preciso estar correndo a Volta da Pampulha para entrar?</div>
+    <div class="a">Não. Acompanhantes são bem-vindos — o espaço foi pensado também para quem vai torcer e celebrar junto.</div>
+  </div>
+  <div class="faq-item">
+    <div class="q">Como funciona o acesso no dia?</div>
+    <div class="a">Com pulseira, retirada de forma antecipada — você chega no dia da prova já com ela no braço. Retirada de 26/11 a 05/12/2026, no Espaço Teo Esportes.</div>
+  </div>
+  <div class="faq-item">
+    <div class="q">Sou membro fundador. Como uso minha cortesia?</div>
+    <div class="a">Aplique seu código exclusivo no checkout: sua entrada sai por R$ 0,00. Os acompanhantes que você levar pagam R$ 120,00 cada.</div>
+  </div>
+  <div class="faq-item">
+    <div class="q">Crianças pagam?</div>
+    <div class="a">Crianças até 5 anos não pagam.</div>
+  </div>
+  <div class="faq-item">
+    <div class="q">Posso cancelar minha compra?</div>
+    <div class="a">Sim, com reembolso integral até 29/11/2026 (7 dias antes da prova). Depois dessa data, não há reembolso.</div>
+  </div>
+</section>
+
+<div class="cta-final">
+  <h2 class="cta-final-title">Fecha o ano com a Teo no dia 06/12.</h2>
+  <a href="#" class="btn-primary">Reservar meu lugar para o dia 06/12</a>
+</div>
+
+<footer>
+  VIP Pampulha 2026 · Teo Esportes · Conteúdo gerado por IA — requer revisão e aprovação humana antes de publicar.
+</footer>
+
+<div class="m-cta">
+  <a href="#">Garantir minha vaga no VIP</a>
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.getElementById('themeBtn');
+    const isLight = html.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      html.setAttribute('data-theme', 'dark');
+      btn.textContent = '☀️ Fundo claro';
+    } else {
+      html.setAttribute('data-theme', 'light');
+      btn.textContent = '🌙 Fundo escuro';
+    }
+  }
+</script>
+
+</body>
+</html>

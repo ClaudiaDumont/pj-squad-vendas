@@ -63,3 +63,14 @@ Interprete os atalhos abaixo carregando o arquivo correspondente em `.aiox-core/
 - `@squad-creator`, `/squad-creator`, `/squad-creator.md` -> `.aiox-core/development/agents/squad-creator.md`
 - `@aiox-master`, `/aiox-master`, `/aiox-master.md` -> `.aiox-core/development/agents/aiox-master.md`
 <!-- AIOX-MANAGED-END: shortcuts -->
+
+<!-- PROJECT-OWNED: mirror-sync (nao gerenciado pelo AIOX) -->
+## Espelhos de Agents (.claude/commands/)
+
+Fonte canonica: `squads/{squad}/agents/*.md`. Os arquivos em
+`.claude/commands/{alias}/` sao DERIVADOS — nunca editar a mao.
+
+- Apos editar qualquer agent: `node scripts/sync-agent-mirrors.mjs`
+- Gate de pre-push (@devops, obrigatorio):
+  `node scripts/sync-agent-mirrors.mjs --check` (exit 1 = push bloqueado ate sincronizar)
+<!-- PROJECT-OWNED-END: mirror-sync -->

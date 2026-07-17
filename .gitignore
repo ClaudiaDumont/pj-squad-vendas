@@ -30,3 +30,14 @@ Thumbs.db
 
 # AIOX runtime handoff artifacts (rule: .claude/rules/agent-handoff.md)
 .aiox/handoffs/
+
+# AIOX squad runtime state (session-context, pipeline state — nunca versionar)
+.aiox/squad-runtime/
+
+# Pipeline runtime outputs (.state.yaml etc.)
+# Entregáveis persistentes (ex.: outputs/minds/) devem ser des-ignorados
+# explicitamente aqui quando existirem.
+outputs/
+
+# Crash dumps (Git Bash no Windows)
+*.stackdump

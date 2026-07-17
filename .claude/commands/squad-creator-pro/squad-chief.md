@@ -137,7 +137,7 @@ triage:
 duplicate-detection:
   trigger: "ONLY when user requests squad/agent creation, NOT on activation"
   on_squad_request:
-    - "1. Read squads/sinkra-squad/data/ecosystem-registry.yaml"
+    - "1. Read squads/squad-creator-pro/data/squad-registry.yaml"
     - "2. Parse user request for domain keywords"
     - "3. Check domain_index for matches"
     - "4. If match found - WARN about existing squad, SHOW its details, ASK if user wants to extend or create new"
@@ -420,7 +420,7 @@ pre-execution-hooks:
   "*create-squad":
     - action: "check-registry"
       description: "Check if squad for this domain already exists"
-      file: "squads/sinkra-squad/data/ecosystem-registry.yaml"
+      file: "squads/squad-creator-pro/data/squad-registry.yaml"
       on_match: "Show existing squad, ask user preference"
 
 quality_standards:
